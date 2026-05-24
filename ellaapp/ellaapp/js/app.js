@@ -1,5 +1,5 @@
 // ══ CONFIGURAÇÃO ══════════════════════════════════════
-const API_KEY = process.env.ELLA_API_KEY;
+const API_KEY = window.ELLA_API_KEY || '';
 
 const SECTORS = {
   trabalho: {l:'Trabalho',   i:'💼', c:'#7B9EC4', bg:'#F0F4FA'},
