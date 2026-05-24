@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Ella">
+  <meta name="theme-color" content="#ffffff">
+  <title>Ella — Sua Assistente Pessoal</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div class="ob" id="ob">
+  <div class="ob-track" id="obTrack">
+
+    <div class="ob-slide">
+      <div class="ob-num">1 de 4</div>
+      <div class="ob-icon">🌿</div>
+      <div class="ob-h">Olá. Eu sou a Ella.</div>
+      <div class="ob-p">Sua assistente pessoal. Aqui você organiza tudo — do trabalho à sua própria paz de espírito.</div>
+      <input class="ob-input" id="obName" type="text" placeholder="Como posso te chamar?">
+    </div>
+
+    <div class="ob-slide">
+      <div class="ob-num">2 de 4</div>
+      <div class="ob-icon">🗂</div>
+      <div class="ob-h">Escolha seus setores</div>
+      <div class="ob-p">Selecione as áreas da sua vida agora. Você pode mudar depois.</div>
+      <div class="ob-sectors" id="obSectors"></div>
+    </div>
+
+    <div class="ob-slide">
+      <div class="ob-num">3 de 4</div>
+      <div class="ob-icon">💬</div>
+      <div class="ob-h">Fale. A Ella organiza.</div>
+      <div class="ob-p">
+        <em>"Pagar fatura sexta"</em><br><br>
+        <em>"Buscar a Maria às 17h"</em><br><br>
+        <em>"Meditação todo dia às 7h"</em><br><br>
+        Basta falar ou digitar. A Ella entende, categoriza e lembra.
+      </div>
+    </div>
+
+    <div class="ob-slide">
+      <div class="ob-num">4 de 4</div>
+      <div class="ob-icon">✨</div>
+      <div class="ob-h" id="obReadyH">Tudo pronto!</div>
+      <div class="ob-p" id="obReadyP">Sua vida organizada começa agora. A Ella está sempre aqui.</div>
+    </div>
+
+  </div>
+  <div class="ob-bar">
+    <div class="ob-dots" id="obDots"></div>
+    <button class="ob-skip" id="obSkip" onclick="obGo(-1)">Voltar</button>
+    <button class="ob-next" id="obNext" onclick="obGo(1)">Próximo</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;flex:1;flex-direction:column;height:100vh;overflow:hidden">
+
+  <div class="topbar">
+    <div class="logo">ella</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="icon-btn" onclick="toggleSearch()" title="Buscar">🔍</button>
+      <div class="avatar" id="topAvatar" onclick="goView('profile')">E</div>
+    </div>
+  </div>
+
+  <div class="search-bar" id="searchBar" style="display:none">
+    <input class="search-input" id="searchInput" placeholder="Buscar tarefas..." oninput="doSearch(this.value)">
+  </div>
+  <div id="searchResults" style="display:none;flex:1;overflow-y:auto;padding:12px 20px;background:#fff"></div>
+
+  <!-- LEGENDA SEMÁFORO -->
+  <div class="semaforo-bar">
+    <div class="sem-item"><div class="sem-dot" style="background:#E53935"></div><div class="sem-lbl">Urgente</div></div>
+    <div class="sem-sep"></div>
+    <div class="sem-item"><div class="sem-dot" style="background:#F9A825"></div><div class="sem-lbl">Atenção</div></div>
+    <div class="sem-sep"></div>
+    <div class="sem-item"><div class="sem-dot" style="background:#43A047"></div><div class="sem-lbl">Tranquila</div></div>
+    <div class="sem-sep"></div>
+    <div class="sem-item"><div class="sem-dot" style="background:#BDBDBD"></div><div class="sem-lbl">Concluída</div></div>
+    <div style="flex:1"></div>
+    <button class="add-quick-btn" onclick="openNew()">+ Nova tarefa</button>
+  </div>
+
+  <!-- VIEWS -->
+  <div class="view on" id="v-chat">
+    <div class="chat-scroll" id="chatScroll"></div>
+    <div class="quick-pills" id="qpills"></div>
+    <div class="ibar">
+      <button class="ibtn mic" id="micBtn" onclick="toggleMic()">🎙</button>
+      <textarea class="ci" id="ci" placeholder="Me conta o que está na cabeça..." rows="1" onkeydown="onEnt(event)" oninput="growCi(this)"></textarea>
+      <button class="ibtn send" onclick="sendChat()">↑</button>
+    </div>
+  </div>
+
+  <div class="view" id="v-check">
+    <div class="chk-scroll">
+      <div class="chk-top">
+        <div class="chk-title" id="chkTitle"></div>
+        <div class="chk-prog-txt" id="chkProg"></div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <div class="focus-row" id="focusRow"></div>
+      <div id="chkBody"></div>
+    </div>
+  </div>
+
+  <div class="view" id="v-cal">
+    <div class="cal-scroll">
+      <div class="cal-hdr">
+        <div class="cal-title" id="calTitle"></div>
+        <div class="cal-nav">
+          <button onclick="mvMonth(-1)">‹</button>
+          <button onclick="mvMonth(1)">›</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div id="dayPanel"></div>
+    </div>
+  </div>
+
+  <div class="view" id="v-mkt">
+    <div class="mkt-scroll">
+      <div class="mkt-title">Lista de Mercado</div>
+      <div class="mkt-photo-grid" id="mktGrid"></div>
+      <div class="mkt-list-title">Lista de texto</div>
+      <div id="mktList"></div>
+    </div>
+    <button class="fab" onclick="openMktAdd()">+</button>
+    <input type="file" accept="image/*" id="photoInput" style="display:none" onchange="handlePhoto(event)">
+  </div>
+
+  <div class="view" id="v-profile">
+    <div class="prof-scroll">
+      <div class="prof-head">
+        <div class="prof-av" id="profAv">e</div>
+        <div class="prof-name-big" id="profNameBig">Meu perfil</div>
+        <div class="prof-sub">Personalize sua experiência</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-title">Dados pessoais</div>
+        <div class="pfield"><label>Nome</label><input id="pName" type="text" placeholder="Seu nome"></div>
+        <div class="pfield"><label>Cidade</label><input id="pCity" type="text" placeholder="Onde você mora?"></div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-title">Meus setores</div>
+        <div class="sec-grid" id="secGrid"></div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-title">Notificações</div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-lbl">Lembretes</div><div class="toggle-sub">Avisar antes de compromissos</div></div>
+          <button class="tog on" id="togN" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="toggle-row" style="border:none;padding-top:12px">
+          <div class="toggle-info"><div class="toggle-lbl">Antecedência padrão</div></div>
+          <select id="pNotif" class="small-select">
+            <option value="5">5 min</option>
+            <option value="10">10 min</option>
+            <option value="15" selected>15 min</option>
+            <option value="30">30 min</option>
+            <option value="60">1h</option>
+          </select>
+        </div>
+      </div>
+      <button class="save-btn" onclick="saveProfile()">Salvar</button>
+      <button class="link-btn" onclick="goView('plans')">Ver planos e assinatura →</button>
+    </div>
+  </div>
+
+  <div class="view" id="v-plans">
+    <div class="plans-scroll">
+      <div class="plans-h">Planos</div>
+      <div class="plans-sub">Comece grátis por 15 dias com tudo liberado.<br>Cancele quando quiser.</div>
+
+      <div class="plan">
+        <div class="plan-top"><div class="plan-name">Pro Grátis</div><div class="plan-tag" style="background:#43A047">15 DIAS</div></div>
+        <div class="plan-price">R$ 0<span>/15 dias</span></div>
+        <div class="plan-period">Todos os recursos, sem cartão</div>
+        <div class="plan-feat">✓ IA ilimitada</div>
+        <div class="plan-feat">✓ Todos os setores</div>
+        <div class="plan-feat">✓ Notificações</div>
+        <div class="plan-feat">✓ Relatório semanal</div>
+        <div class="plan-feat">✓ Lista de mercado com fotos</div>
+        <button class="plan-btn" onclick="toast('Você está no período grátis! 💕')">Plano atual</button>
+      </div>
+
+      <div class="plan">
+        <div class="plan-top"><div class="plan-name">Basic</div></div>
+        <div class="plan-price">R$ 9,90<span>/mês</span></div>
+        <div class="plan-period">Recursos essenciais do dia a dia</div>
+        <div class="plan-feat">✓ Chat com IA (30 msg/dia)</div>
+        <div class="plan-feat">✓ Até 3 setores de vida</div>
+        <div class="plan-feat">✓ Calendário completo</div>
+        <div class="plan-feat">✓ Checklist diário</div>
+        <div class="plan-feat off">– Notificações</div>
+        <div class="plan-feat off">– Relatório semanal IA</div>
+        <button class="plan-btn" onclick="toast('Em breve! 💕')">Assinar Basic</button>
+      </div>
+
+      <div class="plan featured">
+        <div class="plan-top"><div class="plan-name">Ella Pro</div><div class="plan-tag">POPULAR</div></div>
+        <div class="plan-price">R$ 19,90<span>/mês</span></div>
+        <div class="plan-period">ou R$ 159/ano — economize 33%</div>
+        <div class="plan-feat">✓ IA ilimitada</div>
+        <div class="plan-feat">✓ Todos os setores</div>
+        <div class="plan-feat">✓ Notificações inteligentes</div>
+        <div class="plan-feat">✓ Relatório semanal IA</div>
+        <div class="plan-feat">✓ Lista de mercado com fotos</div>
+        <div class="plan-feat">✓ Tarefas recorrentes</div>
+        <button class="plan-btn pri" onclick="toast('Em breve! 💕')">Assinar Pro</button>
+      </div>
+
+      <div class="trust">
+        <span>🔒 Pagamento seguro</span>
+        <span>↩ Cancele quando quiser</span>
+        <span>💳 Pix e cartão</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <button class="bnav-btn on" onclick="goView('chat')"><div class="bnav-ico">💬</div><div class="bnav-lbl">Chat</div></button>
+    <button class="bnav-btn" onclick="goView('check')"><div class="bnav-ico">✅</div><div class="bnav-lbl">Hoje</div></button>
+    <button class="bnav-btn" onclick="goView('cal')"><div class="bnav-ico">🗓</div><div class="bnav-lbl">Agenda</div></button>
+    <button class="bnav-btn" onclick="goView('mkt')"><div class="bnav-ico">🛒</div><div class="bnav-lbl">Mercado</div></button>
+    <button class="bnav-btn" onclick="goView('plans')"><div class="bnav-ico">⭐</div><div class="bnav-lbl">Planos</div></button>
+  </div>
+
+</div>
+
+<!-- MODAL TAREFA -->
+<div class="modal-ov" id="taskModal" onclick="closeMod('taskModal',event)">
+  <div class="modal">
+    <div class="modal-h"><span id="mH">Nova tarefa</span><button class="modal-close" onclick="closeMod('taskModal')">×</button></div>
+    <div class="mf"><label>Título</label><input id="mTitle" type="text" placeholder="O que você precisa fazer?"></div>
+    <div class="mf"><label>Prioridade</label>
+      <div class="pri-row">
+        <button class="pri-opt" id="priRed" onclick="setPri('high')"><span class="pri-dot" style="background:#E53935"></span>Urgente</button>
+        <button class="pri-opt" id="priYellow" onclick="setPri('med')"><span class="pri-dot" style="background:#F9A825"></span>Atenção</button>
+        <button class="pri-opt sel-green" id="priGreen" onclick="setPri('low')"><span class="pri-dot" style="background:#43A047"></span>Tranquila</button>
+      </div>
+    </div>
+    <div class="mf-row">
+      <div class="mf"><label>Setor</label><select id="mSector"></select></div>
+      <div class="mf"><label>Data</label><input id="mDate" type="date"></div>
+    </div>
+    <div class="mf-row">
+      <div class="mf"><label>Horário</label><input id="mTime" type="time"></div>
+      <div class="mf"><label>Lembrar</label>
+        <select id="mNotif">
+          <option value="">Sem lembrete</option>
+          <option value="5">5 min antes</option>
+          <option value="15">15 min antes</option>
+          <option value="30">30 min antes</option>
+          <option value="60">1h antes</option>
+        </select>
+      </div>
+    </div>
+    <div class="mf"><label>Recorrência</label>
+      <div class="recur-btns">
+        <button class="rec-btn sel" data-r="" onclick="setRec(this)">Nenhuma</button>
+        <button class="rec-btn" data-r="daily" onclick="setRec(this)">Todo dia</button>
+        <button class="rec-btn" data-r="weekly" onclick="setRec(this)">Semanal</button>
+        <button class="rec-btn" data-r="monthly" onclick="setRec(this)">Mensal</button>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="mbtn sec" onclick="closeMod('taskModal')">Cancelar</button>
+      <button class="mbtn del" id="mDel" onclick="deleteTask()" style="display:none">Apagar</button>
+      <button class="mbtn pri" onclick="saveTask()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MERCADO -->
+<div class="modal-ov" id="mktModal" onclick="closeMod('mktModal',event)">
+  <div class="modal">
+    <div class="modal-h"><span>Adicionar item</span><button class="modal-close" onclick="closeMod('mktModal')">×</button></div>
+    <div class="mf"><label>Item</label><input id="mktTxt" type="text" placeholder="Ex: Arroz 5kg"></div>
+    <div class="mf"><label>Foto (opcional)</label>
+      <button class="photo-btn" onclick="document.getElementById('photoInput').click()">📷 Escolher foto</button>
+      <span id="photoName" style="font-size:11px;color:#888;margin-left:8px"></span>
+    </div>
+    <div class="modal-btns">
+      <button class="mbtn sec" onclick="closeMod('mktModal')">Cancelar</button>
+      <button class="mbtn pri" onclick="saveMktItem()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+</body>
+</html>
