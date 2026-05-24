@@ -91,7 +91,7 @@ function renderObDots() {
 function obGo(d) {
   if (d > 0 && obIdx === 0) {
     const n = document.getElementById('obName').value.trim();
-    if (!n) { toast('Digite seu nome 💕'); return; }
+    if (!n) { alert('Por favor, digite seu nome! 💕'); return; }
     profile.name = n;
   }
   if (d > 0 && obIdx === 1) profile.sectors = obSels;
