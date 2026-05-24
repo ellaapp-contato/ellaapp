@@ -95,7 +95,7 @@ function obGo(d) {
     profile.name = n;
   }
   if (d > 0 && obIdx === 1) profile.sectors = obSels;
-  obIdx = Math.max(0, Math.min(3, obIdx + d));
+  obIdx = Math.max(0, Math.min(4, obIdx + d));
   document.getElementById('obTrack').style.transform = `translateX(-${obIdx*100}%)`;
   document.getElementById('obSkip').style.visibility = obIdx > 0 ? 'visible' : 'hidden';
   const nb = document.getElementById('obNext');
