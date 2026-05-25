@@ -2,10 +2,10 @@
   "name": "Ella — Assistente Pessoal",
   "short_name": "Ella",
   "description": "Sua assistente pessoal para organizar tudo com inteligência artificial",
-  "start_url": "/",
+  "start_url": "/app",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1A1A1A",
+  "background_color": "#F5F2EC",
+  "theme_color": "#C47B7B",
   "orientation": "portrait",
   "icons": [
     {
