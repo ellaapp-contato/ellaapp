@@ -129,7 +129,9 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 .ibtn{width:37px;height:37px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;transition:.15s}
 .ibtn.send{background:var(--green);color:#fff;box-shadow:0 2px 10px rgba(107,158,133,.35)}
 .ibtn.send:active{transform:scale(.93)}
-.ibtn.mic{background:var(--cream-d);border:1.5px solid var(--border)}
+.ibtn.mic{background:var(--cream-d);border:1.5px solid var(--border);color:var(--text-m)}
+.ibtn.mic svg{width:17px;height:17px}
+.ibtn.mic.rec{color:#fff}
 .ibtn.mic.rec{background:var(--green);animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(107,158,133,.4)}50%{box-shadow:0 0 0 9px rgba(107,158,133,0)}}
 
