@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
   if (!messages) return res.status(400).json({ error: 'Parâmetros inválidos' });
 
   const body = JSON.stringify({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 900,
     system,
     messages,
