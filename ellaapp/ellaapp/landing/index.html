@@ -25,7 +25,7 @@
     .nav-cta:hover{background:var(--green-d);transform:translateY(-1px)}
 
     /* ── HERO ── */
-    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 5% 60px;background:linear-gradient(160deg, var(--cream) 0%, #fff 60%);position:relative;overflow:hidden}
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 5% 60px;background:var(--cream);position:relative;overflow:hidden}
     .hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle, rgba(107,158,133,.12) 0%, transparent 70%);pointer-events:none}
     .hero-inner{max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
     .hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--green-l);color:var(--green-d);font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;margin-bottom:24px;border:1px solid rgba(107,158,133,.25)}
@@ -90,11 +90,11 @@
     .section-sub{font-size:16px;color:var(--text-m);line-height:1.7;max-width:560px}
 
     /* ── FEATURES ── */
-    .features{background:#fff}
+    .features{background:var(--cream)}
     .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px}
-    .feat-card{background:var(--cream);border-radius:20px;padding:28px;border:1px solid var(--border);transition:.2s}
-    .feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(44,44,44,.07)}
-    .feat-ico{width:48px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 2px 8px rgba(44,44,44,.07)}
+    .feat-card{background:#fff;border-radius:20px;padding:28px;border:1px solid var(--border);transition:.2s;box-shadow:0 2px 8px rgba(44,44,44,.04)}
+    .feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(44,44,44,.09)}
+    .feat-ico{width:48px;height:48px;border-radius:14px;background:var(--green-l);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
     .feat-ico svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .feat-h{font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text)}
     .feat-p{font-size:14px;color:var(--text-m);line-height:1.6}
@@ -109,9 +109,9 @@
     .how-p{font-size:14px;color:var(--text-m);line-height:1.6}
 
     /* ── INSTALL ── */
-    .install{background:#fff}
+    .install{background:var(--cream)}
     .install-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px}
-    .install-card{border:1.5px solid var(--border);border-radius:20px;padding:32px}
+    .install-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:32px;box-shadow:0 2px 8px rgba(44,44,44,.04)}
     .install-os{display:flex;align-items:center;gap:12px;margin-bottom:24px}
     .install-os-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .install-os-ico.apple{background:#1a1a1a}
@@ -149,13 +149,13 @@
     .plan-btn{width:100%;padding:14px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:.18s;border:none}
     .plan-btn.pri{background:var(--green);color:#fff;box-shadow:0 6px 20px rgba(107,158,133,.35)}
     .plan-btn.pri:hover{background:var(--green-d)}
-    .plan-btn.sec{background:var(--cream);color:var(--text);border:1.5px solid var(--border)}
+    .plan-btn.sec{background:#fff;color:var(--text);border:1.5px solid var(--border)}
     .plan-btn.sec:hover{border-color:var(--green);color:var(--green)}
 
     /* ── FAQ ── */
-    .faq{background:#fff}
+    .faq{background:var(--cream)}
     .faq-list{margin-top:48px;max-width:700px;display:flex;flex-direction:column;gap:12px}
-    .faq-item{border:1.5px solid var(--border);border-radius:16px;overflow:hidden}
+    .faq-item{background:#fff;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(44,44,44,.04)}
     .faq-q{width:100%;padding:20px 24px;background:none;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:space-between;text-align:left;gap:16px}
     .faq-q svg{flex-shrink:0;transition:transform .25s;color:var(--green)}
     .faq-item.open .faq-q svg{transform:rotate(180deg)}
