@@ -360,65 +360,97 @@ function schedNotifs() {
 // ══ CHECKLIST ════════════════════════════════════════
 function drawCheck() {
   const td = today();
-  const chkTitle = document.getElementById('chkTitle');
+  const now = new Date();
+  const dow = now.getDay();
+  const DAYS = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+
   const chkProg = document.getElementById('chkProg');
   const progFill = document.getElementById('progFill');
   const focusRow = document.getElementById('focusRow');
-  const chkBody = document.getElementById('chkBody');
-  
-  if (chkTitle) chkTitle.textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
-  
+  const chkBody  = document.getElementById('chkBody');
+
+  // ── week strip ──
+  const dateLabel = now.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+  let weekHtml = '<div class="week-card"><div class="week-label">' +
+    dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1) +
+    '</div><div class="week-row">';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now); d.setDate(now.getDate() - dow + i);
+    const isToday = d.toISOString().slice(0,10) === td;
+    weekHtml += '<div class="week-cell' + (isToday ? ' active' : '') + '">' +
+      '<div class="week-abbr">' + DAYS[d.getDay()] + '</div>' +
+      '<div class="week-num">' + d.getDate() + '</div></div>';
+  }
+  weekHtml += '</div></div>';
+
+  // ── filter tasks for today ──
   const all = tasks.filter(function(t) {
     if (t.date === td) return true;
     if (t.recur === 'daily') return true;
-    if (t.recur === 'weekly') return new Date(t.date + 'T12:00').getDay() === new Date().getDay();
-    if (t.recur === 'monthly') return parseInt(t.date.slice(8)) === new Date().getDate();
+    if (t.recur === 'weekly') return new Date(t.date+'T12:00').getDay() === now.getDay();
+    if (t.recur === 'monthly') return parseInt(t.date.slice(8)) === now.getDate();
     return false;
   });
-  
-  const done = all.filter(function(t) { return t.done; }).length;
-  const pct = all.length ? Math.round(done/all.length*100) : 0;
-  if (chkProg) chkProg.textContent = done + '/' + all.length + ' concluídas';
+
+  const doneCount = all.filter(function(t) { return t.done; }).length;
+  const pct = all.length ? Math.round(doneCount/all.length*100) : 0;
+  if (chkProg) chkProg.textContent = doneCount + '/' + all.length;
   if (progFill) progFill.style.width = pct + '%';
-  
+
+  // ── sector filter tabs ──
   if (focusRow) {
-    let fhtml = '<button class="ftab' + (focusSec === null ? ' on' : '') + '" onclick="setFocus(null)">Tudo</button>';
-    profile.sectors.filter(function(k) { return SECTORS[k]; }).forEach(function(k) {
-      fhtml += '<button class="ftab' + (focusSec === k ? ' on' : '') + '" onclick="setFocus(\'' + k + '\')">' + SECTORS[k].i + ' ' + SECTORS[k].l + '</button>';
+    let fhtml = '<button class="ftab' + (focusSec===null?' on':'') + '" onclick="setFocus(null)">Tudo</button>';
+    profile.sectors.filter(function(k){return SECTORS[k];}).forEach(function(k){
+      fhtml += '<button class="ftab' + (focusSec===k?' on':'') + '" onclick="setFocus(\''+k+'\')">'+SECTORS[k].i+' '+SECTORS[k].l+'</button>';
     });
     focusRow.innerHTML = fhtml;
   }
-  
-  const list = focusSec ? all.filter(function(t) { return t.sector === focusSec; }) : all;
-  const groups = [
-    {key:'high', items:list.filter(function(t) { return !t.done && t.priority === 'high'; })},
-    {key:'med',  items:list.filter(function(t) { return !t.done && t.priority === 'med'; })},
-    {key:'low',  items:list.filter(function(t) { return !t.done && t.priority === 'low'; })},
-    {key:'done', items:list.filter(function(t) { return t.done; })},
-  ];
-  
-  let html = '';
-  groups.forEach(function(g) {
-    if (!g.items.length) return;
-    const isDone = g.key === 'done';
-    const p = isDone ? {dot:'#BDBDBD', label:'Concluídas', cls:'feita'} : PRI[g.key];
-    html += '<div class="sem-section"><div class="sem-section-hdr"><div class="sem-section-dot" style="background:' + p.dot + '"></div><div class="sem-section-title" style="color:' + p.dot + '">' + p.label + '</div><div class="sem-section-count">' + g.items.length + ' tarefa' + (g.items.length > 1 ? 's' : '') + '</div></div>';
-    g.items.forEach(function(t) {
-      const s = SECTORS[t.sector] || SECTORS.casa;
-      const pc = isDone ? {dot:'#BDBDBD', cls:'feita'} : PRI[t.priority] || PRI.low;
-      html += '<div class="chk-card ' + pc.cls + '"><div class="chk-row">' +
-        '<div class="chkbox' + (t.done ? ' on' : '') + '" onclick="tickT(' + t.id + ')">' +
-        '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>' +
-        '<div class="chk-lbl' + (t.done ? ' done' : '') + '">' + t.title + (t.recur ? '<span style="font-size:10px;color:#888;margin-left:4px">🔁</span>' : '') + '</div>' +
-        '<div class="chk-right">' + (t.time ? '<div class="chk-time">🕐' + t.time + '</div>' : '') +
-        '<div class="sec-tag" style="background:' + s.bg + ';color:' + s.c + '">' + s.i + '</div>' +
-        '<button class="chk-edit" onclick="openEdit(' + t.id + ')">✎</button></div></div></div>';
+
+  // ── sort: pending first (priority→time), done last ──
+  const pri = {high:0, med:1, low:2};
+  let list = (focusSec ? all.filter(function(t){return t.sector===focusSec;}) : all.slice())
+    .sort(function(a,b){
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      const pd = (pri[a.priority]||1)-(pri[b.priority]||1);
+      return pd !== 0 ? pd : (a.time||'99:99').localeCompare(b.time||'99:99');
     });
-    html += '</div>';
-  });
-  
-  if (!list.length) html = '<div class="sec-empty">Nenhuma tarefa para hoje. Que dia livre! ✨</div>';
-  if (chkBody) chkBody.innerHTML = html;
+
+  // ── render pills ──
+  function pillHtml(t) {
+    const s   = SECTORS[t.sector] || SECTORS.casa;
+    const cls = t.done ? 'feita' : (t.priority==='high' ? 'urgente' : t.priority==='med' ? 'atencao' : 'ok');
+    return '<div class="task-pill ' + cls + '">' +
+      '<div class="pill-time">' + (t.time||'') + '</div>' +
+      '<div class="pill-title' + (t.done?' done':'') + '">' + t.title +
+        (t.recur ? ' <span style="font-size:10px;opacity:.45">↻</span>' : '') +
+      '</div>' +
+      '<div class="pill-right">' +
+        '<span class="pill-ico">' + s.i + '</span>' +
+        '<button class="pill-check' + (t.done?' on':'') + '" onclick="tickT('+t.id+')">' +
+          '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</button>' +
+        '<button class="pill-edit" onclick="openEdit('+t.id+')">✎</button>' +
+      '</div></div>';
+  }
+
+  let pillsHtml = '';
+  const pending = list.filter(function(t){return !t.done;});
+  const done    = list.filter(function(t){return t.done;});
+
+  if (!list.length) {
+    pillsHtml = '<div class="sec-empty">Nenhuma tarefa para hoje. Que dia livre! ✨</div>';
+  } else {
+    if (pending.length) {
+      pillsHtml += '<div class="tasks-section-title">Minhas tarefas</div>';
+      pending.forEach(function(t){ pillsHtml += pillHtml(t); });
+    }
+    if (done.length) {
+      pillsHtml += '<div class="tasks-section-title" style="margin-top:18px">Concluídas</div>';
+      done.forEach(function(t){ pillsHtml += pillHtml(t); });
+    }
+  }
+
+  if (chkBody) chkBody.innerHTML = weekHtml + pillsHtml;
 }
 
 function setFocus(k) { focusSec = k; drawCheck(); }

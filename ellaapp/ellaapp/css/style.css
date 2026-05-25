@@ -1,22 +1,34 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
+  /* Primary brand: warm tan */
+  --pri:      #C4A882;
+  --pri-l:    #F5EDE0;
+  --pri-d:    #8B6B4A;
+
+  /* Greens (checklist checkboxes, ok tasks) */
   --green:    #6B9E85;
   --green-l:  #EEF5F0;
   --green-d:  #4A7A62;
-  --cream:    #FAF7F2;
-  --cream-d:  #F2EDE4;
-  --sand:     #C4A882;
-  --sand-l:   #FAF4EB;
+
+  --cream:    #F5F2EC;
+  --cream-d:  #EDE8DF;
   --text:     #2C2C2C;
   --text-m:   #9A8E83;
   --card:     #FFFFFF;
   --border:   #E8E2D8;
   --border-s: #F0EBE2;
 
-  --red:      #C0514A;  --red-l:    #FDF0EF;  --red-d:#8B2E28;
-  --yellow:   #C49A3C;  --yellow-l: #FDF8EC;  --yellow-d:#8B6B1A;
-  --ok:       #6B9E85;  --ok-l:     #EEF5F0;  --ok-d:#4A7A62;
-  --done:     #C4B8AC;  --done-l:   #F5F2EE;
+  /* Priority colors — muted pastels like Ser Planner */
+  --red:      #C0514A;  --red-l:    #F0D8D6;  --red-d:#7A2A26;
+  --yellow:   #C49A3C;  --yellow-l: #EEE0B4;  --yellow-d:#7A5C10;
+  --ok:       #6B9E85;  --ok-l:     #C0D4C8;  --ok-d:#3A6B54;
+  --done:     #C4B8AC;  --done-l:   #E0DAD2;
+
+  /* Task pill backgrounds */
+  --pill-urgente: #E2C4C0;
+  --pill-atencao: #E4D8A8;
+  --pill-ok:      #BED0C4;
+  --pill-feita:   #D8D2CA;
 
   --trabalho: #7B9EC4; --trabalho-l:#EFF4FB;
   --casa:     #C49B7B; --casa-l:   #FAF4EE;
@@ -116,54 +128,63 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(107,158,133,.4)}50%{box-shadow:0 0 0 9px rgba(107,158,133,0)}}
 
 /* ── CHECKLIST ───────────────────────────────────────── */
-.chk-scroll{flex:1;overflow-y:auto;padding:16px 18px;background:var(--cream)}
-.chk-top{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
-.chk-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text)}
-.chk-prog-txt{font-size:12px;color:var(--text-m)}
-.prog-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden}
-.prog-fill{height:100%;background:var(--green);border-radius:2px;transition:.4s}
-.focus-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:14px;border-bottom:1px solid var(--border-s);margin-bottom:14px}
+.chk-scroll{flex:1;overflow-y:auto;padding:14px 16px 20px;background:var(--cream)}
+.chk-top{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.chk-title{display:none}
+.chk-prog-txt{font-size:12px;color:var(--text-m);margin-left:auto}
+.prog-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:12px;overflow:hidden}
+.prog-fill{height:100%;background:var(--pri);border-radius:2px;transition:.5s}
+.focus-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:12px;margin-bottom:12px}
 .focus-row::-webkit-scrollbar{display:none}
 .ftab{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;border:1.5px solid var(--border);background:var(--card);cursor:pointer;color:var(--text-m);transition:.15s}
-.ftab.on{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 2px 8px rgba(107,158,133,.25)}
-.sem-section{margin-bottom:18px}
-.sem-section-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:0 2px}
-.sem-section-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.sem-section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-m)}
-.sem-section-count{font-size:11px;color:var(--text-m);margin-left:auto}
-.chk-card{background:var(--card);border-radius:14px;border:1px solid var(--border-s);overflow:hidden;margin-bottom:8px;box-shadow:0 1px 6px rgba(44,44,44,.04);transition:.15s}
-.chk-card:hover{box-shadow:0 2px 12px rgba(44,44,44,.08)}
-.chk-card.urgente{border-left:3px solid var(--red)}
-.chk-card.atencao{border-left:3px solid var(--yellow)}
-.chk-card.ok{border-left:3px solid var(--ok)}
-.chk-card.feita{border-left:3px solid var(--done);opacity:.6}
-.chk-row{display:flex;align-items:center;gap:11px;padding:11px 14px}
-.chkbox{width:21px;height:21px;border-radius:7px;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.18s}
-.chkbox.on{border-color:var(--ok);background:var(--ok)}
-.chkbox svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:.15s}
-.chkbox.on svg{opacity:1}
-.chk-lbl{font-size:13px;flex:1;line-height:1.35;color:var(--text)}
-.chk-lbl.done{text-decoration:line-through;color:var(--done)}
-.chk-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.chk-time{font-size:11px;color:var(--text-m);white-space:nowrap}
+.ftab.on{background:var(--pri);border-color:var(--pri);color:#fff;box-shadow:0 2px 8px rgba(196,168,130,.3)}
+
+/* Week strip */
+.week-card{background:var(--card);border-radius:20px;padding:16px 14px;margin-bottom:14px;box-shadow:0 2px 10px rgba(44,44,44,.06)}
+.week-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-m);text-align:center;margin-bottom:14px}
+.week-row{display:flex;justify-content:space-between;gap:4px}
+.week-cell{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;border-radius:12px;transition:.18s}
+.week-cell.active{background:var(--pri);box-shadow:0 3px 10px rgba(196,168,130,.4)}
+.week-abbr{font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--text-m);text-transform:uppercase}
+.week-num{font-size:16px;font-weight:600;color:var(--text)}
+.week-cell.active .week-abbr,.week-cell.active .week-num{color:#fff}
+
+/* Task section title */
+.tasks-section-title{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--text-m);text-transform:uppercase;margin-bottom:10px;padding:0 2px}
+
+/* Task pills */
+.task-pill{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;margin-bottom:8px;transition:.15s;cursor:default}
+.task-pill.urgente{background:var(--pill-urgente)}
+.task-pill.atencao{background:var(--pill-atencao)}
+.task-pill.ok{background:var(--pill-ok)}
+.task-pill.feita{background:var(--pill-feita);opacity:.7}
+.pill-time{font-size:11px;font-weight:600;color:rgba(44,44,44,.5);min-width:36px;flex-shrink:0;line-height:1}
+.pill-title{flex:1;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text);line-height:1.3}
+.pill-title.done{text-decoration:line-through;opacity:.5}
+.pill-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.pill-ico{font-size:15px;opacity:.7}
+.pill-check{width:28px;height:28px;border-radius:50%;border:2px solid rgba(44,44,44,.18);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.18s}
+.pill-check svg{width:12px;height:12px;stroke:rgba(44,44,44,.3);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:.15s}
+.pill-check.on{background:rgba(44,44,44,.12);border-color:rgba(44,44,44,.12)}
+.pill-check.on svg{opacity:1}
+.pill-edit{width:26px;height:26px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-size:12px;color:rgba(44,44,44,.35);transition:.15s}
+.pill-edit:hover{color:var(--text)}
 .sec-tag{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:600}
-.chk-edit{width:24px;height:24px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-size:12px;color:var(--text-m);transition:.15s}
-.chk-edit:hover{background:var(--cream)}
-.sec-empty{font-size:13px;color:var(--text-m);font-style:italic;padding:10px 4px;text-align:center}
+.sec-empty{font-size:13px;color:var(--text-m);font-style:italic;padding:20px 4px;text-align:center}
 
 /* ── CALENDÁRIO ──────────────────────────────────────── */
 .cal-scroll{flex:1;overflow-y:auto;padding:16px 18px;background:var(--cream)}
-.cal-hdr{display:flex;align-items:center;margin-bottom:14px}
-.cal-title{font-family:'DM Serif Display',serif;font-size:20px;flex:1;color:var(--text)}
-.cal-nav button{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:14px;color:var(--text-m);margin-left:5px;transition:.15s}
-.cal-nav button:hover{border-color:var(--green);color:var(--green)}
+.cal-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cal-month-pill{flex:1;background:var(--pri);color:#fff;border-radius:100px;text-align:center;padding:13px 16px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 3px 12px rgba(196,168,130,.35)}
+.cal-nav-btn{width:40px;height:40px;border-radius:50%;border:none;background:var(--card);cursor:pointer;font-size:18px;color:var(--text-m);box-shadow:0 2px 8px rgba(44,44,44,.08);flex-shrink:0;transition:.15s}
+.cal-nav-btn:hover{color:var(--pri)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px}
 .cal-dn{text-align:center;font-size:10px;font-weight:600;color:var(--text-m);padding:4px 0;letter-spacing:.04em}
 .cal-d{min-height:46px;border-radius:10px;padding:5px;background:var(--card);border:1px solid var(--border-s);cursor:pointer;transition:.15s}
 .cal-d:hover{border-color:var(--green)}
-.cal-d.today{background:var(--green);border-color:var(--green);box-shadow:0 2px 8px rgba(107,158,133,.3)}
+.cal-d.today{background:var(--pri);border-color:var(--pri);box-shadow:0 2px 8px rgba(196,168,130,.35)}
 .cal-d.today .dnum{color:#fff}
-.cal-d.sel:not(.today){border-color:var(--green);border-width:2px;background:var(--green-l)}
+.cal-d.sel:not(.today){border-color:var(--pri);border-width:2px;background:var(--pri-l)}
 .cal-d.om{opacity:.2}
 .dnum{font-size:11px;font-weight:600;color:var(--text)}
 .cdots{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px}

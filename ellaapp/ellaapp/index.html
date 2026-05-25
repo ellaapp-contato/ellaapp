@@ -117,11 +117,9 @@
   <div class="view" id="v-cal">
     <div class="cal-scroll">
       <div class="cal-hdr">
-        <div class="cal-title" id="calTitle"></div>
-        <div class="cal-nav">
-          <button onclick="mvMonth(-1)">‹</button>
-          <button onclick="mvMonth(1)">›</button>
-        </div>
+        <button class="cal-nav-btn" onclick="mvMonth(-1)">‹</button>
+        <div class="cal-month-pill" id="calTitle"></div>
+        <button class="cal-nav-btn" onclick="mvMonth(1)">›</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
       <div id="dayPanel"></div>
