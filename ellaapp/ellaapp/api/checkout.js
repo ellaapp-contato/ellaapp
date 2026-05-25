@@ -7,16 +7,28 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const origin = (req.headers.referer || 'https://ellaapp.com.br').replace(/\/$/, '').split('/').slice(0, 3).join('/');
+  const isAnnual = req.query.plan === 'annual';
 
-  const body = querystring.stringify({
-    mode: 'subscription',
-    'line_items[0][price]': process.env.STRIPE_PRICE_ID,
-    'line_items[0][quantity]': '1',
-    payment_method_collection: 'always',
-    locale: 'pt-BR',
-    success_url: origin + '/app?pro=1',
-    cancel_url: origin + '/#planos',
-  });
+  const body = isAnnual
+    ? querystring.stringify({
+        mode: 'payment',
+        'payment_method_types[0]': 'card',
+        'payment_method_types[1]': 'pix',
+        'line_items[0][price]': process.env.STRIPE_ANNUAL_PRICE_ID,
+        'line_items[0][quantity]': '1',
+        locale: 'pt-BR',
+        success_url: origin + '/app?pro=1',
+        cancel_url: origin + '/#planos',
+      })
+    : querystring.stringify({
+        mode: 'subscription',
+        'line_items[0][price]': process.env.STRIPE_PRICE_ID,
+        'line_items[0][quantity]': '1',
+        payment_method_collection: 'always',
+        locale: 'pt-BR',
+        success_url: origin + '/app?pro=1',
+        cancel_url: origin + '/#planos',
+      });
 
   const options = {
     hostname: 'api.stripe.com',
