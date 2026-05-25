@@ -317,6 +317,20 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
   }
+
+  // iOS install banner — shown on /app so the home-screen icon points to the app, not landing
+  (function() {
+    var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    var isSafari = /safari/i.test(navigator.userAgent) && !/chrome|crios|fxios/i.test(navigator.userAgent);
+    var isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+    var wantsInstall = /[?&]install=ios/.test(location.search);
+    if (!isIOS || !isSafari || isStandalone || !wantsInstall) return;
+    if (document.getElementById('ios-banner')) return;
+    var banner = document.createElement('div');
+    banner.id = 'ios-banner';
+    banner.innerHTML = '<style>#ios-banner{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #E8DDD0;padding:16px 20px 32px;z-index:9999;box-shadow:0 -8px 32px rgba(44,44,44,.15);animation:slideUp .3s ease;font-family:\'DM Sans\',sans-serif}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}#ios-banner .ib-head{font-size:15px;font-weight:700;color:#2C2C2C;margin-bottom:4px}#ios-banner .ib-sub{font-size:12px;color:#9A8E83;margin-bottom:16px}#ios-banner .ib-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#9A8E83}#ios-banner .ib-steps{display:flex;gap:6px;align-items:flex-start}#ios-banner .ib-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;text-align:center}#ios-banner .ib-ico{width:48px;height:48px;border-radius:14px;background:#FAF0F0;display:flex;align-items:center;justify-content:center;font-size:24px}#ios-banner .ib-txt{font-size:11px;color:#9A8E83;line-height:1.4}#ios-banner .ib-arr{font-size:20px;color:#C47B7B;margin-top:14px;flex-shrink:0}</style><button class="ib-close" onclick="document.getElementById(\'ios-banner\').remove()">×</button><div class="ib-head">🌸 Instalar a Ella no iPhone</div><div class="ib-sub">3 passos rápidos pelo Safari</div><div class="ib-steps"><div class="ib-step"><div class="ib-ico">⎋</div><div class="ib-txt">Toca em <strong>Compartilhar</strong> aqui embaixo</div></div><div class="ib-arr">›</div><div class="ib-step"><div class="ib-ico">＋</div><div class="ib-txt">Toca em <strong>"Adicionar à Tela de Início"</strong></div></div><div class="ib-arr">›</div><div class="ib-step"><div class="ib-ico">🌸</div><div class="ib-txt"><strong>Toca Adicionar</strong> e pronto!</div></div></div>';
+    document.body.appendChild(banner);
+  })();
 </script>
 </body>
 </html>
