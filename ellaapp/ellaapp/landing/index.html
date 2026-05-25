@@ -532,6 +532,53 @@ function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   item.classList.toggle('open');
 }
+
+// ── iOS Install Banner ──────────────────────────────────
+(function(){
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSafari = /safari/i.test(navigator.userAgent) && !/chrome|crios|fxios/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = sessionStorage.getItem('ios_banner_dismissed');
+
+  if (!isIOS || !isSafari || isStandalone || dismissed) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'ios-banner';
+  banner.innerHTML = `
+    <style>
+      #ios-banner{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #E8DDD0;padding:16px 20px 28px;z-index:9999;box-shadow:0 -8px 32px rgba(44,44,44,.12);animation:slideUp .3s ease}
+      @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+      #ios-banner .ib-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#2C2C2C;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+      #ios-banner .ib-close{background:none;border:none;font-size:20px;cursor:pointer;color:#9A8E83;padding:0 4px}
+      #ios-banner .ib-steps{display:flex;gap:8px;align-items:flex-start}
+      #ios-banner .ib-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;text-align:center}
+      #ios-banner .ib-ico{width:44px;height:44px;border-radius:12px;background:#FAF0F0;display:flex;align-items:center;justify-content:center;font-size:22px}
+      #ios-banner .ib-txt{font-family:'DM Sans',sans-serif;font-size:11px;color:#9A8E83;line-height:1.4}
+      #ios-banner .ib-arrow{font-size:18px;color:#C47B7B;margin-top:12px;flex-shrink:0}
+    </style>
+    <div class="ib-title">
+      <span>🌸 Instalar a Ella no iPhone</span>
+      <button class="ib-close" onclick="document.getElementById('ios-banner').remove();sessionStorage.setItem('ios_banner_dismissed','1')">×</button>
+    </div>
+    <div class="ib-steps">
+      <div class="ib-step">
+        <div class="ib-ico">↑</div>
+        <div class="ib-txt">Toca no ícone de <strong>compartilhar</strong> aqui embaixo</div>
+      </div>
+      <div class="ib-arrow">›</div>
+      <div class="ib-step">
+        <div class="ib-ico">📋</div>
+        <div class="ib-txt">Rola e toca <strong>"Adicionar à Tela de Início"</strong></div>
+      </div>
+      <div class="ib-arrow">›</div>
+      <div class="ib-step">
+        <div class="ib-ico">🌸</div>
+        <div class="ib-txt"><strong>Pronto!</strong> O ícone aparece na sua tela</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(banner);
+})();
 </script>
 </body>
 </html>
