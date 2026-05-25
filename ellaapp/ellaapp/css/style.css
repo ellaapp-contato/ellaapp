@@ -44,9 +44,10 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 #app{display:flex;flex-direction:column;height:100vh}
 
 /* ── ONBOARDING ─────────────────────────────────────── */
-.ob{position:fixed;inset:0;background:var(--cream);z-index:500;display:flex;flex-direction:column}
-.ob-track{display:flex;flex:1;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.ob{position:fixed;inset:0;background:var(--cream);z-index:500;display:flex;flex-direction:column;overflow-y:auto}
+.ob-track{display:flex;flex:1;min-height:340px;transition:transform .4s cubic-bezier(.4,0,.2,1)}
 .ob-slide{min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;text-align:center}
+
 .ob-num{font-size:11px;font-weight:500;color:var(--text-m);letter-spacing:.14em;text-transform:uppercase;margin-bottom:36px}
 .ob-icon{font-size:52px;margin-bottom:28px;filter:drop-shadow(0 4px 12px rgba(107,158,133,.2))}
 .ob-h{font-family:'DM Serif Display',serif;font-size:30px;color:var(--text);margin-bottom:14px;line-height:1.2}
@@ -61,7 +62,7 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 .ob-sec-ico svg{width:22px;height:22px;color:var(--text-m);transition:.18s}
 .ob-sec.on .ob-sec-ico svg{color:var(--green-d)}
 .ob-sec-name{font-size:13px;font-weight:500;color:var(--text)}
-.ob-bar{padding:20px 32px 36px;display:flex;gap:12px;flex-shrink:0;align-items:center}
+.ob-bar{padding:20px 32px 36px;display:flex;gap:12px;flex-shrink:0;align-items:center;position:sticky;bottom:0;background:var(--cream);z-index:1}
 .ob-dots{display:flex;gap:6px;margin-right:auto}
 .ob-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:.25s}
 .ob-dot.on{background:var(--green);width:20px;border-radius:4px}
