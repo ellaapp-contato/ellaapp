@@ -236,7 +236,7 @@ function buildQPills() {
   const el = document.getElementById('qpills');
   if (!el) return;
   el.innerHTML = profile.sectors.filter(function(k) { return SECTORS[k]; }).map(function(k) {
-    return '<button class="qpill" onclick="inject(\'Tenho tarefas de ' + SECTORS[k].l + ' para organizar\')">' + SECTORS[k].i + ' ' + SECTORS[k].l + '</button>';
+    return '<button class="qpill" onclick="inject(\'Tenho tarefas de ' + SECTORS[k].l + ' para organizar\')"><span class="qpill-dot" style="background:' + SECTORS[k].c + '"></span>' + SECTORS[k].l + '</button>';
   }).join('');
 }
 
@@ -401,7 +401,7 @@ function drawCheck() {
   if (focusRow) {
     let fhtml = '<button class="ftab' + (focusSec===null?' on':'') + '" onclick="setFocus(null)">Tudo</button>';
     profile.sectors.filter(function(k){return SECTORS[k];}).forEach(function(k){
-      fhtml += '<button class="ftab' + (focusSec===k?' on':'') + '" onclick="setFocus(\''+k+'\')">'+SECTORS[k].i+' '+SECTORS[k].l+'</button>';
+      fhtml += '<button class="ftab' + (focusSec===k?' on':'') + '" onclick="setFocus(\''+k+'\')"><span class="ftab-dot" style="background:'+SECTORS[k].c+'"></span>'+SECTORS[k].l+'</button>';
     });
     focusRow.innerHTML = fhtml;
   }
