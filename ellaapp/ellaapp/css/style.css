@@ -304,8 +304,7 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 /* ── BOTTOM NAV ──────────────────────────────────────── */
 .bnav{background:var(--card);border-top:1px solid var(--border-s);display:flex;padding:9px 0 14px;flex-shrink:0;box-shadow:0 -1px 12px rgba(44,44,44,.05)}
 .bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border:none;background:transparent;cursor:pointer;padding:4px 0;transition:.15s}
-.bnav-ico{width:22px;height:22px;color:var(--text-m);transition:.18s}
-.bnav-ico svg{width:100%;height:100%;display:block}
+.bnav-ico{font-size:20px;transition:.18s;line-height:1}
 .bnav-lbl{font-size:10px;font-weight:500;color:var(--text-m);transition:.15s}
 .bnav-btn.on .bnav-ico{color:var(--pri);transform:scale(1.1)}
 .bnav-btn.on .bnav-lbl{color:var(--pri);font-weight:700}
