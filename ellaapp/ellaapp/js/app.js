@@ -1,5 +1,5 @@
 // ══ CONFIGURAÇÃO ══════════════════════════════════════
-const API_KEY = window.ELLA_API_KEY || '';
+// A chave da API fica segura no servidor (variável de ambiente no Vercel)
 
 const SECTORS = {
   trabalho: {l:'Trabalho',   i:'💼', c:'#7B9EC4', bg:'#F0F4FA'},
@@ -296,15 +296,10 @@ async function sendChat() {
   const sys = 'Você é Ella, assistente pessoal calorosa para mulheres multitarefas.\nHoje: ' + tl + ' (' + today() + '). Setores ativos: ' + activeSecs + '. Tarefas: ' + snap + '\nREGRAS:\n- Português brasileiro, tom acolhedor e prático\n- Ao identificar tarefas inclua ao FIM: <tasks>[{"title":"...","sector":"key","date":"YYYY-MM-DD","time":"HH:MM ou vazio","priority":"high|med|low","notifMin":numero_ou_vazio,"recur":"daily|weekly|monthly|vazio"}]</tasks>\n- priority: high=urgente, med=atenção, low=tranquila\n- Use apenas setores ativos. Sem <tasks> se não houver tarefas novas. Seja breve e gentil.';
   
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:900, system:sys, messages:chatHist})
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({system: sys, messages: chatHist})
     });
     const data = await r.json();
     hideTyping();
