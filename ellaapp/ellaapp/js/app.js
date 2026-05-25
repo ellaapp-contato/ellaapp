@@ -349,41 +349,11 @@ function toggleMic() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { showToast('Use o Chrome para voz 🎙'); return; }
   if (micOn) { if (recog) recog.stop(); return; }
-  recog = new SR();
-  recog.lang = 'pt-BR';
-  recog.continuous = false;
-  recog.interimResults = true;
-  recog.onstart = function() {
-    micOn = true;
-    const mb = document.getElementById('micBtn'); if (mb) mb.classList.add('rec');
-    const ci = document.getElementById('ci'); if (ci) { ci.value = ''; ci.placeholder = 'Ouvindo...'; }
-  };
-  recog.onresult = function(e) {
-    const ci = document.getElementById('ci');
-    if (!ci) return;
-    let interim = '', final = '';
-    for (var i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) final += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
-    }
-    ci.value = final || interim;
-    growCi(ci);
-  };
-  recog.onend = function() {
-    micOn = false;
-    const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec');
-    const ci = document.getElementById('ci');
-    if (ci) {
-      ci.placeholder = 'Me conta o que está na cabeça...';
-      ci.focus();
-    }
-  };
-  recog.onerror = function() {
-    micOn = false;
-    const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec');
-    const ci = document.getElementById('ci'); if (ci) ci.placeholder = 'Me conta o que está na cabeça...';
-    showToast('Não ouvi. Tente de novo!');
-  };
+  recog = new SR(); recog.lang = 'pt-BR'; recog.continuous = false;
+  recog.onstart = function() { micOn = true; const mb = document.getElementById('micBtn'); if (mb) mb.classList.add('rec'); };
+  recog.onresult = function(e) { const ci = document.getElementById('ci'); if (ci) ci.value = e.results[0][0].transcript; sendChat(); };
+  recog.onend = function() { micOn = false; const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec'); };
+  recog.onerror = function() { micOn = false; const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec'); showToast('Não ouvi. Tente de novo!'); };
   recog.start();
 }
 
