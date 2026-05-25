@@ -303,7 +303,12 @@ async function sendChat() {
     });
     const data = await r.json();
     hideTyping();
+    if (!r.ok || data.error) {
+      addMsg('ella', 'Erro da IA: ' + (data.error || data.error_description || JSON.stringify(data)));
+      return;
+    }
     const full = (data.content || []).map(function(b) { return b.text || ''; }).join('');
+    if (!full) { addMsg('ella', 'Ops! Resposta vazia da IA. Tente novamente. 💕'); return; }
     chatHist.push({role:'assistant', content:full});
     const match = full.match(/<tasks>([\s\S]*?)<\/tasks>/);
     let added = [];
@@ -318,7 +323,7 @@ async function sendChat() {
     }
     addMsg('ella', full.replace(/<tasks>[\s\S]*?<\/tasks>/g, '').trim().replace(/\n/g, '<br>'), added);
     if (added.length) showToast(added.length + ' tarefa' + (added.length > 1 ? 's' : '') + ' salva' + (added.length > 1 ? 's' : '') + '! 🌸');
-  } catch(e) { hideTyping(); addMsg('ella', 'Ops! Verifique sua conexão e tente novamente. 💕'); }
+  } catch(e) { hideTyping(); addMsg('ella', 'Erro de conexão: ' + e.message); }
 }
 
 function onEnt(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } }
