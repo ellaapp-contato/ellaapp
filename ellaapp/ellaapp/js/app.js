@@ -20,10 +20,17 @@ const SECTORS = {
     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>'},
 };
 
+const PRI_SVG = {
+  high: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  med:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
+  low:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.96c1.4 9.3-3.6 19.4-8.2 17.04zM2 21c0-3 1.85-5.36 5.08-6"/></svg>',
+  done: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+};
+
 const PRI = {
-  high: {dot:'#E53935', bg:'#FFF0F0', label:'Urgente',   cls:'urgente', dark:'#B71C1C'},
-  med:  {dot:'#F9A825', bg:'#FFFBEA', label:'Atenção',   cls:'atencao', dark:'#E65100'},
-  low:  {dot:'#43A047', bg:'#F0FFF1', label:'Tranquila', cls:'ok',      dark:'#1B5E20'},
+  high: {dot:'#E53935', bg:'#FFF0F0', label:'Urgente',      cls:'urgente', dark:'#B71C1C', svg:PRI_SVG.high},
+  med:  {dot:'#F9A825', bg:'#FFFBEA', label:'Importante',   cls:'atencao', dark:'#E65100', svg:PRI_SVG.med},
+  low:  {dot:'#43A047', bg:'#F0FFF1', label:'Sem urgência', cls:'ok',      dark:'#1B5E20', svg:PRI_SVG.low},
 };
 
 // ══ STATE ═════════════════════════════════════════════
@@ -342,11 +349,41 @@ function toggleMic() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { showToast('Use o Chrome para voz 🎙'); return; }
   if (micOn) { if (recog) recog.stop(); return; }
-  recog = new SR(); recog.lang = 'pt-BR'; recog.continuous = false;
-  recog.onstart = function() { micOn = true; const mb = document.getElementById('micBtn'); if (mb) mb.classList.add('rec'); };
-  recog.onresult = function(e) { const ci = document.getElementById('ci'); if (ci) ci.value = e.results[0][0].transcript; sendChat(); };
-  recog.onend = function() { micOn = false; const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec'); };
-  recog.onerror = function() { micOn = false; const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec'); showToast('Não ouvi. Tente de novo!'); };
+  recog = new SR();
+  recog.lang = 'pt-BR';
+  recog.continuous = false;
+  recog.interimResults = true;
+  recog.onstart = function() {
+    micOn = true;
+    const mb = document.getElementById('micBtn'); if (mb) mb.classList.add('rec');
+    const ci = document.getElementById('ci'); if (ci) { ci.value = ''; ci.placeholder = 'Ouvindo...'; }
+  };
+  recog.onresult = function(e) {
+    const ci = document.getElementById('ci');
+    if (!ci) return;
+    let interim = '', final = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    ci.value = final || interim;
+    growCi(ci);
+  };
+  recog.onend = function() {
+    micOn = false;
+    const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec');
+    const ci = document.getElementById('ci');
+    if (ci) {
+      ci.placeholder = 'Me conta o que está na cabeça...';
+      ci.focus();
+    }
+  };
+  recog.onerror = function() {
+    micOn = false;
+    const mb = document.getElementById('micBtn'); if (mb) mb.classList.remove('rec');
+    const ci = document.getElementById('ci'); if (ci) ci.placeholder = 'Me conta o que está na cabeça...';
+    showToast('Não ouvi. Tente de novo!');
+  };
   recog.start();
 }
 
@@ -545,14 +582,49 @@ function togMkt(id) { const m = mktItems.find(function(x){return x.id===id;}); i
 function delMkt(id) { mktItems = mktItems.filter(function(x){return x.id!==id;}); persist(); drawMkt(); showToast('Removido'); }
 
 // ══ MODAL TASK ════════════════════════════════════════
+let curSector = 'trabalho';
+
 function buildSectorSelect() {
-  const sel = document.getElementById('mSector');
-  if (!sel) return;
-  sel.innerHTML = Object.entries(SECTORS).map(function(entry) {
-    return '<option value="' + entry[0] + '">' + entry[1].i + ' ' + entry[1].l + '</option>';
+  const opts = document.getElementById('mSectorOpts');
+  if (!opts) return;
+  opts.innerHTML = Object.entries(SECTORS).map(function(entry) {
+    const k = entry[0], s = entry[1];
+    return '<div class="sec-drop-opt" data-key="' + k + '" onclick="setMSector(\'' + k + '\')">' +
+      '<span class="sec-drop-opt-ico" style="color:' + s.c + '">' + s.svg + '</span>' + s.l + '</div>';
   }).join('');
 }
 buildSectorSelect();
+
+function setMSector(key) {
+  curSector = key;
+  const s = SECTORS[key];
+  if (!s) return;
+  const ico = document.getElementById('mSectorIco');
+  const lbl = document.getElementById('mSectorLbl');
+  const hid = document.getElementById('mSector');
+  if (ico) { ico.innerHTML = s.svg; ico.style.color = s.c; }
+  if (lbl) lbl.textContent = s.l;
+  if (hid) hid.value = key;
+  document.querySelectorAll('.sec-drop-opt').forEach(function(el) {
+    el.classList.toggle('sel', el.dataset.key === key);
+  });
+  closeSecDrop();
+}
+
+function toggleSecDrop() {
+  const d = document.getElementById('mSectorDrop');
+  if (d) d.classList.toggle('open');
+}
+
+function closeSecDrop() {
+  const d = document.getElementById('mSectorDrop');
+  if (d) d.classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+  const d = document.getElementById('mSectorDrop');
+  if (d && !d.contains(e.target)) closeSecDrop();
+});
 
 function setPri(p) {
   curPri = p;
@@ -573,7 +645,7 @@ function openNew(dateStr) {
   editId = null;
   const mh = document.getElementById('mH'); if(mh) mh.textContent = 'Nova tarefa';
   const mt = document.getElementById('mTitle'); if(mt) mt.value = '';
-  const ms = document.getElementById('mSector'); if(ms) ms.value = profile.sectors[0] || 'casa';
+  setMSector(profile.sectors[0] || 'casa');
   const md = document.getElementById('mDate'); if(md) md.value = dateStr || today();
   const mti = document.getElementById('mTime'); if(mti) mti.value = '';
   const mn = document.getElementById('mNotif'); if(mn) mn.value = '';
@@ -590,7 +662,7 @@ function openEdit(id) {
   if(!t) return;
   const mh = document.getElementById('mH'); if(mh) mh.textContent = 'Editar tarefa';
   const mt = document.getElementById('mTitle'); if(mt) mt.value = t.title;
-  const ms = document.getElementById('mSector'); if(ms) ms.value = t.sector;
+  setMSector(t.sector || 'casa');
   const md = document.getElementById('mDate'); if(md) md.value = t.date;
   const mti = document.getElementById('mTime'); if(mti) mti.value = t.time||'';
   const mn = document.getElementById('mNotif'); if(mn) mn.value = t.notifMin||'';

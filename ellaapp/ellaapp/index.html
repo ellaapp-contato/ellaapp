@@ -80,13 +80,13 @@
 
   <!-- LEGENDA SEMÁFORO -->
   <div class="semaforo-bar">
-    <div class="sem-item"><div class="sem-dot" style="background:#E53935"></div><div class="sem-lbl">Urgente</div></div>
+    <div class="sem-item"><span class="sem-ico" style="color:#E53935"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div class="sem-lbl">Urgente</div></div>
     <div class="sem-sep"></div>
-    <div class="sem-item"><div class="sem-dot" style="background:#F9A825"></div><div class="sem-lbl">Atenção</div></div>
+    <div class="sem-item"><span class="sem-ico" style="color:#F9A825"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span><div class="sem-lbl">Importante</div></div>
     <div class="sem-sep"></div>
-    <div class="sem-item"><div class="sem-dot" style="background:#43A047"></div><div class="sem-lbl">Tranquila</div></div>
+    <div class="sem-item"><span class="sem-ico" style="color:#43A047"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.96c1.4 9.3-3.6 19.4-8.2 17.04zM2 21c0-3 1.85-5.36 5.08-6"/></svg></span><div class="sem-lbl">Sem urgência</div></div>
     <div class="sem-sep"></div>
-    <div class="sem-item"><div class="sem-dot" style="background:#BDBDBD"></div><div class="sem-lbl">Concluída</div></div>
+    <div class="sem-item"><span class="sem-ico" style="color:#9E9E9E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><div class="sem-lbl">Concluída</div></div>
     <div style="flex:1"></div>
     <button class="add-quick-btn" onclick="openNew()">+ Nova tarefa</button>
   </div>
@@ -259,13 +259,23 @@
     <div class="mf"><label>Título</label><input id="mTitle" type="text" placeholder="O que você precisa fazer?"></div>
     <div class="mf"><label>Prioridade</label>
       <div class="pri-row">
-        <button class="pri-opt" id="priRed" onclick="setPri('high')"><span class="pri-dot" style="background:#E53935"></span>Urgente</button>
-        <button class="pri-opt" id="priYellow" onclick="setPri('med')"><span class="pri-dot" style="background:#F9A825"></span>Atenção</button>
-        <button class="pri-opt sel-green" id="priGreen" onclick="setPri('low')"><span class="pri-dot" style="background:#43A047"></span>Tranquila</button>
+        <button class="pri-opt" id="priRed" onclick="setPri('high')"><span class="pri-ico" style="color:#E53935"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Urgente</button>
+        <button class="pri-opt" id="priYellow" onclick="setPri('med')"><span class="pri-ico" style="color:#F9A825"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>Importante</button>
+        <button class="pri-opt sel-green" id="priGreen" onclick="setPri('low')"><span class="pri-ico" style="color:#43A047"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.96c1.4 9.3-3.6 19.4-8.2 17.04zM2 21c0-3 1.85-5.36 5.08-6"/></svg></span>Sem urgência</button>
       </div>
     </div>
     <div class="mf-row">
-      <div class="mf"><label>Setor</label><select id="mSector"></select></div>
+      <div class="mf"><label>Setor</label>
+        <div class="sec-drop" id="mSectorDrop">
+          <div class="sec-drop-val" onclick="toggleSecDrop()">
+            <span class="sec-drop-ico" id="mSectorIco"></span>
+            <span class="sec-drop-lbl" id="mSectorLbl">Trabalho</span>
+            <svg class="sec-drop-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="sec-drop-opts" id="mSectorOpts"></div>
+        </div>
+        <input type="hidden" id="mSector">
+      </div>
       <div class="mf"><label>Data</label><input id="mDate" type="date"></div>
     </div>
     <div class="mf-row">
