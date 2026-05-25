@@ -1,4 +1,4 @@
-const CACHE = 'ella-v4';
+const CACHE = 'ella-v5';
 const FILES = ['/index.html', '/css/style.css', '/js/app.js', '/manifest.json'];
 
 self.addEventListener('install', e => {
