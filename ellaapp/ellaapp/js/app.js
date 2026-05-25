@@ -218,17 +218,31 @@ function initApp() {
   updateAvatar();
   buildQPills();
   schedNotifs();
+  renderTrialBadge();
   setTimeout(function() {
     const h = new Date().getHours();
     const g = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
     const n = tasks.filter(function(t) { return t.date === today() && !t.done; }).length;
     const urg = tasks.filter(function(t) { return t.date === today() && !t.done && t.priority === 'high'; }).length;
+    const firstTime = !localStorage.getItem('ella_welcomed');
     let msg = g + ', <strong>' + profile.name + '</strong>! 🌿<br><br>';
-    msg += 'Você tem <strong>' + n + ' tarefa' + (n !== 1 ? 's' : '') + '</strong> para hoje';
-    if (urg > 0) msg += ' — <span style="color:#E53935;font-weight:600">' + urg + ' urgente' + (urg > 1 ? 's' : '') + ' 🔴</span>';
-    msg += '.<br><br>Me conta o que mais está na cabeça!';
+    if (firstTime && getPlan() === 'trial') {
+      msg = '🎁 <strong>' + profile.name + '</strong>, você desbloqueou <strong>15 dias de Ella Pro</strong> — sem cartão!<br><br>' +
+            'Aproveita tudo: voz, IA sem limite, todos os 8 setores, notificações.<br><br>' +
+            'Me conta, o que tá na sua cabeça hoje?';
+      localStorage.setItem('ella_welcomed', '1');
+    } else {
+      msg += 'Você tem <strong>' + n + ' tarefa' + (n !== 1 ? 's' : '') + '</strong> para hoje';
+      if (urg > 0) msg += ' — <span style="color:#E53935;font-weight:600">' + urg + ' urgente' + (urg > 1 ? 's' : '') + ' 🔴</span>';
+      msg += '.<br><br>Me conta o que mais está na cabeça!';
+      if (getPlan() === 'free') {
+        const left = msgsTodayLeft();
+        msg += '<br><br><span style="font-size:11px;color:#9A8E83">💬 ' + left + '/' + FREE_MSG_LIMIT + ' mensagens grátis hoje</span>';
+      }
+    }
     addMsg('ella', msg);
   }, 300);
+  setTimeout(maybeShowTrialModals, 1500);
 }
 
 // ══ VIEWS ════════════════════════════════════════════
@@ -247,6 +261,7 @@ function goView(v) {
   if (v === 'mkt') drawMkt();
   if (v === 'profile') loadProf();
   if (v === 'plans') drawPlans();
+  renderTrialBadge();
   const sb = document.getElementById('searchBar');
   const sr = document.getElementById('searchResults');
   if (sb) sb.style.display = 'none';
@@ -338,10 +353,15 @@ async function sendChat() {
   const txt = inp.value.trim();
   if (!txt) return;
   if (getPlan() === 'free' && msgsTodayLeft() <= 0) {
-    showToast('Limite diário: 5 msgs grátis. Volta amanhã ou ativa Pro 💕');
+    showUpsell('msg');
     return;
   }
-  if (getPlan() === 'free') bumpMsgCount();
+  if (getPlan() === 'free') {
+    bumpMsgCount();
+    const left = msgsTodayLeft();
+    if (left === 1) setTimeout(function(){ showToast('⚡ Última mensagem hoje no Grátis'); }, 800);
+    else if (left === 0) setTimeout(function(){ showToast('Acabou seu limite de hoje 💕'); }, 800);
+  }
   inp.value = ''; inp.style.height = 'auto';
   addMsg('user', txt.replace(/\n/g, '<br>'));
   chatHist.push({role:'user', content:txt});
@@ -388,7 +408,7 @@ function growCi(el) { el.style.height = 'auto'; el.style.height = Math.min(el.sc
 
 // ══ MIC ══════════════════════════════════════════════
 function toggleMic() {
-  if (getPlan() === 'free') { showToast('Voz é Pro 🎙 R$ 9,90/mês desbloqueia'); return; }
+  if (getPlan() === 'free') { showUpsell('voice'); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { showToast('Use o Chrome para voz 🎙'); return; }
   if (micOn) { if (recog) recog.stop(); return; }
@@ -761,7 +781,7 @@ function togSecP(k) {
   if (i > -1) { if (profile.sectors.length > 1) profile.sectors.splice(i,1); }
   else {
     if (getPlan() === 'free' && profile.sectors.length >= FREE_SECTORS_LIMIT) {
-      showToast('Plano Grátis: máximo 3 setores. Pro libera todos 💕');
+      showUpsell('sector');
       return;
     }
     profile.sectors.push(k);
@@ -776,6 +796,88 @@ function saveProfile() {
   const pno = document.getElementById('pNotif'); if(pno) profile.notifMin = parseInt(pno.value)||15;
   persist(); updateAvatar(); buildQPills();
   showToast('Perfil salvo ✓');
+}
+
+// ══ UPSELL MODAL ═════════════════════════════════════
+const UPSELLS = {
+  voice: {
+    icon: '🎙',
+    title: 'A voz é Pro',
+    sub: 'Você ainda pode digitar — mas com Pro a Ella te ouve. Mais rápido nas correrias do dia.'
+  },
+  msg: {
+    icon: '💬',
+    title: 'Limite diário atingido',
+    sub: 'Você usou suas 5 mensagens grátis de hoje. Com Pro, conversa sem limite.'
+  },
+  sector: {
+    icon: '🗂',
+    title: 'Mais setores é Pro',
+    sub: 'No Grátis são 3 setores. Com Pro você organiza trabalho, casa, família, saúde, finanças, estudos, social e meu tempo — tudo junto.'
+  }
+};
+
+function showUpsell(type) {
+  const data = UPSELLS[type] || UPSELLS.voice;
+  const ic = document.getElementById('upsellIcon');
+  const t = document.getElementById('upsellTitle');
+  const s = document.getElementById('upsellSub');
+  if (ic) ic.textContent = data.icon;
+  if (t) t.textContent = data.title;
+  if (s) s.textContent = data.sub;
+  const el = document.getElementById('upsellModal');
+  if (el) el.classList.add('open');
+}
+
+function showTrialModal(kind) {
+  const ic = document.getElementById('trialIcon');
+  const t = document.getElementById('trialTitle');
+  const s = document.getElementById('trialSub');
+  if (kind === 'ending') {
+    const d = trialDaysLeft();
+    if (ic) ic.textContent = d === 1 ? '🔥' : '⏰';
+    if (t) t.textContent = d === 1 ? 'Último dia do Pro' : 'Faltam ' + d + ' dias';
+    if (s) s.textContent = 'Seu Ella Pro acaba ' + (d === 1 ? 'hoje' : 'em breve') + '. Sem ativar, você volta pro plano Grátis — com limites.';
+  } else {
+    if (ic) ic.textContent = '🌸';
+    if (t) t.textContent = 'Seus 15 dias acabaram';
+    if (s) s.textContent = 'Agora você está no plano Grátis. Tudo continua funcionando, com limites. Quando quiser tudo de volta, é só ativar Pro.';
+  }
+  const el = document.getElementById('trialModal');
+  if (el) el.classList.add('open');
+}
+
+function maybeShowTrialModals() {
+  const plan = getPlan();
+  if (plan === 'trial') {
+    const d = trialDaysLeft();
+    if (d <= 3 && !localStorage.getItem('ella_trial_warned')) {
+      localStorage.setItem('ella_trial_warned', '1');
+      setTimeout(function() { showTrialModal('ending'); }, 1200);
+    }
+  } else if (plan === 'free' && profile.trialStart && !localStorage.getItem('ella_trial_ended_shown')) {
+    localStorage.setItem('ella_trial_ended_shown', '1');
+    setTimeout(function() { showTrialModal('ended'); }, 1200);
+  }
+}
+
+// ══ TRIAL BADGE (topbar) ═════════════════════════════
+function renderTrialBadge() {
+  const el = document.getElementById('trialBadge');
+  if (!el) return;
+  const plan = getPlan();
+  if (plan === 'trial') {
+    const d = trialDaysLeft();
+    const urgent = d <= 3;
+    el.style.display = 'flex';
+    el.className = 'trial-badge' + (urgent ? ' urgent' : '');
+    el.innerHTML = '<span style="font-size:13px">✨</span><span>' + d + ' ' + (d === 1 ? 'dia' : 'dias') + ' Pro</span>';
+    el.onclick = function() { goView('plans'); };
+  } else if (plan === 'pro') {
+    el.style.display = 'none';
+  } else {
+    el.style.display = 'none';
+  }
 }
 
 // ══ PLANS VIEW ═══════════════════════════════════════
