@@ -244,7 +244,7 @@ function buildQPills() {
   const el = document.getElementById('qpills');
   if (!el) return;
   el.innerHTML = profile.sectors.filter(function(k) { return SECTORS[k]; }).map(function(k) {
-    return '<button class="qpill" onclick="inject(\'Tenho tarefas de ' + SECTORS[k].l + ' para organizar\')"><span class="qpill-dot" style="background:' + SECTORS[k].c + '"></span>' + SECTORS[k].l + '</button>';
+    return '<button class="qpill" onclick="inject(\'Tenho tarefas de ' + SECTORS[k].l + ' para organizar\')"><span class="qpill-ico" style="color:' + SECTORS[k].c + '">' + (SECTORS[k].svg||'') + '</span>' + SECTORS[k].l + '</button>';
   }).join('');
 }
 
