@@ -72,9 +72,11 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 /* ── TOPBAR ──────────────────────────────────────────── */
 .topbar{background:var(--card);border-bottom:1px solid var(--border-s);display:flex;align-items:center;padding:0 18px;height:54px;flex-shrink:0;box-shadow:0 1px 8px rgba(44,44,44,.04)}
 .logo{font-family:'DM Serif Display',serif;font-size:24px;color:var(--green);font-style:italic;flex:1;letter-spacing:-.02em}
-.icon-btn{width:36px;height:36px;border-radius:50%;border:none;background:transparent;cursor:pointer;font-size:16px;color:var(--text-m);transition:.15s}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:none;background:transparent;cursor:pointer;font-size:16px;color:var(--text-m);transition:.15s;display:flex;align-items:center;justify-content:center}
+.icon-btn svg{width:18px;height:18px}
 .icon-btn:hover{background:var(--cream)}
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'DM Serif Display',serif;font-style:italic;box-shadow:0 2px 8px rgba(107,158,133,.3)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(107,158,133,.3)}
+.avatar svg{width:17px;height:17px}
 
 /* ── SEMÁFORO BAR ────────────────────────────────────── */
 .semaforo-bar{display:flex;align-items:center;gap:6px;padding:8px 18px;background:var(--card);border-bottom:1px solid var(--border-s);flex-shrink:0;overflow-x:auto;scrollbar-width:none}
