@@ -67,17 +67,13 @@ profile = Object.assign({name:'', city:'', sectors:['trabalho','casa','familia',
 tasks = load('ella_tasks', []);
 mktItems = load('ella_mkt', []);
 
-// Dados demo
-if (!tasks.length) {
-  const td = today();
-  tasks = [
-    {id:1, title:'Reunião com cliente', sector:'trabalho', date:td, time:'14:00', done:false, priority:'high', notifMin:15, recur:''},
-    {id:2, title:'Pagar conta de luz', sector:'casa', date:td, time:'', done:false, priority:'high', notifMin:'', recur:''},
-    {id:3, title:'Buscar as crianças', sector:'familia', date:td, time:'17:00', done:false, priority:'med', notifMin:30, recur:'daily'},
-    {id:4, title:'Meditação 15 min', sector:'tempo', date:td, time:'07:00', done:true, priority:'low', notifMin:'', recur:'daily'},
-  ];
-  persist();
+// One-time cleanup: remove old seed demo tasks (ids 1-4) for existing installs
+if (!localStorage.getItem('ella_demos_cleared')) {
+  tasks = tasks.filter(function(t) { return t.id > 4; });
+  localStorage.setItem('ella_demos_cleared', '1');
+  try { localStorage.setItem('ella_tasks', JSON.stringify(tasks)); } catch(e) {}
 }
+
 
 // ══ ONBOARDING ════════════════════════════════════════
 window.onload = function() {
