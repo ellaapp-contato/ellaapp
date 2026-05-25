@@ -409,7 +409,7 @@ function drawCheck() {
   if (focusRow) {
     let fhtml = '<button class="ftab' + (focusSec===null?' on':'') + '" onclick="setFocus(null)">Tudo</button>';
     profile.sectors.filter(function(k){return SECTORS[k];}).forEach(function(k){
-      fhtml += '<button class="ftab' + (focusSec===k?' on':'') + '" onclick="setFocus(\''+k+'\')"><span class="ftab-dot" style="background:'+SECTORS[k].c+'"></span>'+SECTORS[k].l+'</button>';
+      fhtml += '<button class="ftab' + (focusSec===k?' on':'') + '" onclick="setFocus(\''+k+'\')"><span class="ftab-ico" style="color:'+SECTORS[k].c+'">'+(SECTORS[k].svg||'')+'</span>'+SECTORS[k].l+'</button>';
     });
     focusRow.innerHTML = fhtml;
   }
