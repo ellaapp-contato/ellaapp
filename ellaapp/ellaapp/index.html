@@ -177,27 +177,29 @@
 
   <div class="view" id="v-plans">
     <div class="plans-scroll">
+      <div id="trialBanner"></div>
       <div class="plans-h">Planos</div>
-      <div class="plans-sub">Use grátis para sempre.<br>Assine quando sentir falta.</div>
+      <div class="plans-sub" id="plansSub">15 dias com tudo liberado, sem cartão.<br>Depois você escolhe.</div>
 
       <div class="plan">
-        <div class="plan-top"><div class="plan-name">Grátis</div></div>
+        <div class="plan-top"><div class="plan-name">Grátis</div><div id="freeTag"></div></div>
         <div class="plan-price">R$ 0<span>/sempre</span></div>
         <div class="plan-period">gratuito para sempre · sem cartão</div>
-        <div class="plan-feat">✓ IA (10 mensagens/dia)</div>
-        <div class="plan-feat">✓ 2 setores de vida</div>
+        <div class="plan-feat">✓ IA (5 mensagens/dia)</div>
+        <div class="plan-feat">✓ 3 setores de vida</div>
         <div class="plan-feat">✓ Agenda e checklist</div>
         <div class="plan-feat">✓ Lista de mercado</div>
+        <div class="plan-feat off">– Voz (digitar funciona)</div>
         <div class="plan-feat off">– Notificações</div>
         <div class="plan-feat off">– Tarefas recorrentes</div>
-        <button class="plan-btn" onclick="toast('Você já está usando a Ella grátis! 💕')">Plano atual</button>
       </div>
 
       <div class="plan featured">
-        <div class="plan-top"><div class="plan-name">Ella Pro</div><div class="plan-tag">RECOMENDADO</div></div>
+        <div class="plan-top"><div class="plan-name">Ella Pro</div><div class="plan-tag" id="proTag">RECOMENDADO</div></div>
         <div class="plan-price">R$ 9,90<span>/mês</span></div>
         <div class="plan-period">menos que um café · cancele quando quiser</div>
         <div class="plan-feat">✓ <strong>IA ilimitada</strong></div>
+        <div class="plan-feat">✓ <strong>Voz</strong> (fale, a Ella ouve)</div>
         <div class="plan-feat">✓ <strong>Todos os 8 setores</strong></div>
         <div class="plan-feat">✓ Notificações inteligentes</div>
         <div class="plan-feat">✓ Tarefas recorrentes</div>

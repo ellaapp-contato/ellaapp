@@ -74,6 +74,44 @@ if (!localStorage.getItem('ella_demos_cleared')) {
   try { localStorage.setItem('ella_tasks', JSON.stringify(tasks)); } catch(e) {}
 }
 
+// ══ PLANO / TRIAL ═════════════════════════════════════
+const TRIAL_DAYS = 15;
+const FREE_MSG_LIMIT = 5;
+const FREE_SECTORS_LIMIT = 3;
+const DAY_MS = 86400000;
+
+function ensureTrialStarted() {
+  if (!profile.trialStart) {
+    profile.trialStart = Date.now();
+    persist();
+  }
+}
+
+function getPlan() {
+  if (profile.proUntil && profile.proUntil > Date.now()) return 'pro';
+  if (profile.trialStart && Date.now() < profile.trialStart + TRIAL_DAYS * DAY_MS) return 'trial';
+  return 'free';
+}
+
+function trialDaysLeft() {
+  if (!profile.trialStart) return TRIAL_DAYS;
+  const ms = (profile.trialStart + TRIAL_DAYS * DAY_MS) - Date.now();
+  return Math.max(0, Math.ceil(ms / DAY_MS));
+}
+
+function msgsTodayLeft() {
+  const td = today();
+  if (profile.msgDate !== td) return FREE_MSG_LIMIT;
+  return Math.max(0, FREE_MSG_LIMIT - (profile.msgCount || 0));
+}
+
+function bumpMsgCount() {
+  const td = today();
+  if (profile.msgDate !== td) { profile.msgDate = td; profile.msgCount = 0; }
+  profile.msgCount = (profile.msgCount || 0) + 1;
+  persist();
+}
+
 
 // ══ ONBOARDING ════════════════════════════════════════
 window.onload = function() {
@@ -81,6 +119,7 @@ window.onload = function() {
   buildObSecs();
   
   if (profile.name && profile.name.length > 0) {
+    ensureTrialStarted();
     document.getElementById('ob').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     initApp();
@@ -166,6 +205,7 @@ function obGo(d) {
 }
 
 function startApp() {
+  ensureTrialStarted();
   persist();
   const ob = document.getElementById('ob');
   const app = document.getElementById('app');
@@ -206,6 +246,7 @@ function goView(v) {
   if (v === 'cal') drawCal();
   if (v === 'mkt') drawMkt();
   if (v === 'profile') loadProf();
+  if (v === 'plans') drawPlans();
   const sb = document.getElementById('searchBar');
   const sr = document.getElementById('searchResults');
   if (sb) sb.style.display = 'none';
@@ -296,6 +337,11 @@ async function sendChat() {
   if (!inp) return;
   const txt = inp.value.trim();
   if (!txt) return;
+  if (getPlan() === 'free' && msgsTodayLeft() <= 0) {
+    showToast('Limite diário: 5 msgs grátis. Volta amanhã ou ativa Pro 💕');
+    return;
+  }
+  if (getPlan() === 'free') bumpMsgCount();
   inp.value = ''; inp.style.height = 'auto';
   addMsg('user', txt.replace(/\n/g, '<br>'));
   chatHist.push({role:'user', content:txt});
@@ -342,6 +388,7 @@ function growCi(el) { el.style.height = 'auto'; el.style.height = Math.min(el.sc
 
 // ══ MIC ══════════════════════════════════════════════
 function toggleMic() {
+  if (getPlan() === 'free') { showToast('Voz é Pro 🎙 R$ 9,90/mês desbloqueia'); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { showToast('Use o Chrome para voz 🎙'); return; }
   if (micOn) { if (recog) recog.stop(); return; }
@@ -712,7 +759,13 @@ function loadProf() {
 function togSecP(k) {
   const i = profile.sectors.indexOf(k);
   if (i > -1) { if (profile.sectors.length > 1) profile.sectors.splice(i,1); }
-  else profile.sectors.push(k);
+  else {
+    if (getPlan() === 'free' && profile.sectors.length >= FREE_SECTORS_LIMIT) {
+      showToast('Plano Grátis: máximo 3 setores. Pro libera todos 💕');
+      return;
+    }
+    profile.sectors.push(k);
+  }
   loadProf();
 }
 
@@ -723,6 +776,38 @@ function saveProfile() {
   const pno = document.getElementById('pNotif'); if(pno) profile.notifMin = parseInt(pno.value)||15;
   persist(); updateAvatar(); buildQPills();
   showToast('Perfil salvo ✓');
+}
+
+// ══ PLANS VIEW ═══════════════════════════════════════
+function drawPlans() {
+  const plan = getPlan();
+  const banner = document.getElementById('trialBanner');
+  const sub = document.getElementById('plansSub');
+  const freeTag = document.getElementById('freeTag');
+  const proTag = document.getElementById('proTag');
+  if (!banner) return;
+
+  if (plan === 'trial') {
+    const d = trialDaysLeft();
+    banner.innerHTML = '<div style="background:linear-gradient(135deg,#C47B7B,#9A5050);color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:22px;text-align:center;box-shadow:0 4px 18px rgba(196,123,123,.35)">' +
+      '<div style="font-size:12px;font-weight:600;opacity:.85;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">✨ Você está no Pro</div>' +
+      '<div style="font-family:\'DM Serif Display\',serif;font-size:32px;line-height:1.1;margin-bottom:4px">' + d + ' dia' + (d !== 1 ? 's' : '') + '</div>' +
+      '<div style="font-size:13px;opacity:.9">grátis · sem cartão</div>' +
+      '</div>';
+    if (sub) sub.innerHTML = 'Aproveite tudo até o fim do teste.<br>Depois você escolhe.';
+    if (freeTag) freeTag.innerHTML = '';
+    if (proTag) proTag.innerHTML = 'ATIVO AGORA';
+  } else if (plan === 'pro') {
+    banner.innerHTML = '<div style="background:#F0FAF4;color:#2E7D4F;border:1px solid #B8E0C4;border-radius:14px;padding:14px 18px;margin-bottom:22px;text-align:center;font-size:13px;font-weight:600">💚 Você é Pro · obrigada!</div>';
+    if (sub) sub.innerHTML = '';
+    if (freeTag) freeTag.innerHTML = '';
+    if (proTag) proTag.innerHTML = 'SEU PLANO';
+  } else {
+    banner.innerHTML = '';
+    if (sub) sub.innerHTML = 'O grátis funciona — mas com a Pro você libera tudo.';
+    if (freeTag) freeTag.innerHTML = '<div class="plan-tag" style="background:#EDE0D4;color:#2C2C2C">SEU PLANO</div>';
+    if (proTag) proTag.innerHTML = 'RECOMENDADO';
+  }
 }
 
 // ══ TOAST ════════════════════════════════════════════
