@@ -130,10 +130,11 @@
 
     /* ── PRICING ── */
     .pricing{background:var(--cream)}
-    .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px;align-items:start}
-    .plan{background:#fff;border-radius:24px;padding:32px;border:1.5px solid var(--border);position:relative;transition:.2s}
+    .plans{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:52px;align-items:start;max-width:780px}
+    .plan{background:#fff;border-radius:24px;padding:36px;border:1.5px solid var(--border);position:relative;transition:.2s}
     .plan:hover{transform:translateY(-4px)}
     .plan.featured{border-color:var(--green);box-shadow:0 12px 40px rgba(107,158,133,.2)}
+    @media(max-width:600px){.plans{grid-template-columns:1fr}}
     .plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:5px 16px;border-radius:100px;letter-spacing:.06em;white-space:nowrap}
     .plan-name{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:6px}
     .plan-desc{font-size:13px;color:var(--text-m);margin-bottom:24px;line-height:1.5}
@@ -420,51 +421,40 @@
 <section class="pricing" id="planos">
   <div class="section-inner">
     <div class="section-tag">Planos</div>
-    <h2 class="section-h">Comece grátis.<br><em>Assine quando quiser.</em></h2>
-    <p class="section-sub">15 dias com tudo liberado, sem cartão de crédito. Depois escolha o plano que combina com você.</p>
+    <h2 class="section-h">Simples assim:<br><em>grátis ou pro.</em></h2>
+    <p class="section-sub">15 dias experimentando tudo. Depois, R$ 9,90/mês para continuar com a vida organizada — menos que um café.</p>
     <div class="plans">
       <div class="plan">
-        <div class="plan-name">Pro Grátis</div>
-        <div class="plan-desc">15 dias para experimentar tudo, sem compromisso.</div>
-        <div class="plan-price">R$ 0<span>/15 dias</span></div>
-        <div class="plan-period">Sem cartão de crédito</div>
+        <div class="plan-name">Grátis</div>
+        <div class="plan-desc">Experimente tudo por 15 dias. Depois fica com o básico sem pagar nada.</div>
+        <div class="plan-price">R$ 0<span>/sempre</span></div>
+        <div class="plan-period">15 dias com tudo · depois freemium</div>
         <div class="plan-feats">
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>IA ilimitada</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Todos os setores</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Notificações</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>IA (10 mensagens/dia)</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>2 setores de vida</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Agenda e checklist</div>
           <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Lista de mercado</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Agenda completa</div>
-        </div>
-        <a href="/app" class="plan-btn sec" style="display:block;text-align:center;text-decoration:none;padding:14px;border-radius:100px;font-size:14px;font-weight:600;background:var(--cream);color:var(--text);border:1.5px solid var(--border);cursor:pointer">Começar grátis</a>
-      </div>
-      <div class="plan">
-        <div class="plan-name">Basic</div>
-        <div class="plan-desc">Para quem quer manter o dia a dia organizado.</div>
-        <div class="plan-price">R$ 9<span style="font-size:24px;font-weight:700">,90</span><span>/mês</span></div>
-        <div class="plan-period">Cobrado mensalmente</div>
-        <div class="plan-feats">
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Chat com IA (30 msg/dia)</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Até 3 setores de vida</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Calendário completo</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Checklist diário</div>
           <div class="plan-feat off"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Notificações</div>
+          <div class="plan-feat off"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Tarefas recorrentes</div>
         </div>
-        <button class="plan-btn sec" onclick="alert('Em breve! Experimente o plano grátis por enquanto 💕')">Assinar Basic</button>
+        <a href="/app" class="plan-btn sec" style="display:block;text-align:center;text-decoration:none;padding:14px;border-radius:100px;font-size:14px;font-weight:600;background:var(--cream);color:var(--text);border:1.5px solid var(--border)">Começar grátis</a>
       </div>
       <div class="plan featured">
-        <div class="plan-badge">MAIS POPULAR</div>
+        <div class="plan-badge">RECOMENDADO</div>
         <div class="plan-name">Ella Pro</div>
-        <div class="plan-desc">Para quem quer o melhor da IA no dia a dia.</div>
-        <div class="plan-price">R$ 19<span style="font-size:24px;font-weight:700">,90</span><span>/mês</span></div>
-        <div class="plan-period">ou R$ 159/ano — economize 33%</div>
+        <div class="plan-desc">Tudo ilimitado. A experiência completa da sua assistente pessoal com IA.</div>
+        <div class="plan-price">R$ 9<span style="font-size:28px;font-weight:700">,90</span><span>/mês</span></div>
+        <div class="plan-period">ou R$ 89/ano — economize 25%</div>
         <div class="plan-feats">
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>IA ilimitada</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Todos os setores</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><strong>IA ilimitada</strong></div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><strong>Todos os 8 setores</strong></div>
           <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Notificações inteligentes</div>
-          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Relatório semanal IA</div>
           <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Tarefas recorrentes</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Relatório semanal IA</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Lista de mercado com fotos</div>
         </div>
-        <button class="plan-btn pri" onclick="alert('Em breve! Experimente o plano grátis por enquanto 💕')">Assinar Pro</button>
+        <button class="plan-btn pri" onclick="alert('Em breve! Experimente grátis por enquanto 💕')">Assinar por R$ 9,90/mês</button>
+        <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-m)">🔒 Pagamento seguro · Cancele quando quiser</div>
       </div>
     </div>
   </div>
