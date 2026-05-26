@@ -1,6 +1,4 @@
-// ══ CONFIGURAÇÃO ══════════════════════════════════════
-// A chave da API fica segura no servidor (variável de ambiente no Vercel)
-
+// ══ SETORES ═══════════════════════════════════════════
 const SECTORS = {
   trabalho: {l:'Trabalho',  i:'💼', c:'#7B9EC4', bg:'#F0F4FA',
     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>'},
@@ -8,8 +6,8 @@ const SECTORS = {
     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'},
   familia:  {l:'Família',   i:'👨‍👩‍👧', c:'#7BAF8A', bg:'#F0FAF4',
     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'},
-  tempo:    {l:'Meu Tempo', i:'✨', c:'#9B7BC4', bg:'#F4F0FA',
-    svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>'},
+  tempo:    {l:'Academia',  i:'🏋️', c:'#7BAF8A', bg:'#F0FAF4',
+    svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>'},
   saude:    {l:'Saúde',     i:'💊', c:'#C47B7B', bg:'#FAF0F0',
     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'},
   financas: {l:'Finanças',  i:'💰', c:'#7BAF8A', bg:'#F0FAF4',
@@ -29,23 +27,23 @@ const PRI_SVG = {
 
 const PRI = {
   high: {dot:'#E53935', bg:'#FFF0F0', label:'Urgente',      cls:'urgente', dark:'#B71C1C', svg:PRI_SVG.high},
-  med:  {dot:'#F9A825', bg:'#FFFBEA', label:'Importante',   cls:'atencao', dark:'#E65100', svg:PRI_SVG.med},
+  med:  {dot:'#C49A3C', bg:'#FFFBEA', label:'Importante',   cls:'atencao', dark:'#7A5C10', svg:PRI_SVG.med},
   low:  {dot:'#43A047', bg:'#F0FFF1', label:'Sem urgência', cls:'ok',      dark:'#1B5E20', svg:PRI_SVG.low},
 };
 
 // ══ STATE ═════════════════════════════════════════════
 let profile = {name:'', city:'', sectors:['trabalho','casa','familia','tempo'], notifMin:15, togN:true};
 let tasks = [];
-let mktItems = [];
+let lists = [];      // Listas (substituiu mktItems)
 let chatHist = [];
 let selDay = today();
+let checkDay = today();  // dia selecionado na view Hoje
 let calRef = new Date();
 let editId = null;
 let focusSec = null;
 let curPri = 'low';
 let curRec = '';
 let recog = null, micOn = false;
-let pendingPhoto = null;
 let notifTimers = [];
 
 // ONBOARDING STATE
@@ -53,21 +51,43 @@ let obIdx = 0;
 let obSels = ['trabalho','casa','familia','tempo'];
 
 function today() { return new Date().toISOString().slice(0,10); }
+function addDays(dateStr, n) {
+  const d = new Date(dateStr + 'T12:00'); d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0,10);
+}
 function load(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
 function persist() {
   try {
-    localStorage.setItem('ella_tasks', JSON.stringify(tasks));
+    localStorage.setItem('ella_tasks',   JSON.stringify(tasks));
     localStorage.setItem('ella_profile', JSON.stringify(profile));
-    localStorage.setItem('ella_mkt', JSON.stringify(mktItems));
+    localStorage.setItem('ella_lists',   JSON.stringify(lists));
   } catch(e) {}
 }
 
-// Carregar dados
+// ── Carregar dados ──
 profile = Object.assign({name:'', city:'', sectors:['trabalho','casa','familia','tempo'], notifMin:15, togN:true}, load('ella_profile', {}));
 tasks = load('ella_tasks', []);
-mktItems = load('ella_mkt', []);
+lists = load('ella_lists', []);
 
-// One-time cleanup: remove old seed demo tasks (ids 1-4) for existing installs
+// Migrar mktItems antigos → lists
+(function() {
+  const old = load('ella_mkt', null);
+  if (old && old.length && !localStorage.getItem('ella_mkt_migrated')) {
+    const textItems = old.filter(function(m) { return !m.photo; });
+    if (textItems.length) {
+      lists.push({
+        id: Date.now(),
+        name: 'Lista de mercado',
+        items: textItems.map(function(m) { return {id: m.id, text: m.title, done: m.done||false}; }),
+        createdAt: Date.now()
+      });
+      persist();
+    }
+    localStorage.setItem('ella_mkt_migrated', '1');
+  }
+})();
+
+// One-time cleanup: remove old seed demo tasks
 if (!localStorage.getItem('ella_demos_cleared')) {
   tasks = tasks.filter(function(t) { return t.id > 4; });
   localStorage.setItem('ella_demos_cleared', '1');
@@ -81,20 +101,24 @@ const FREE_SECTORS_LIMIT = 3;
 const DAY_MS = 86400000;
 
 function ensureTrialStarted() {
-  if (!profile.trialStart) {
-    profile.trialStart = Date.now();
-    persist();
+  if (!profile.trialStart || typeof profile.trialStart !== 'number' || profile.trialStart > Date.now()) {
+    // Só define se realmente não tiver um valor válido no passado
+    if (!profile.trialStart || typeof profile.trialStart !== 'number') {
+      profile.trialStart = Date.now();
+      persist();
+    }
   }
 }
 
 function getPlan() {
   if (profile.proUntil && profile.proUntil > Date.now()) return 'pro';
-  if (profile.trialStart && Date.now() < profile.trialStart + TRIAL_DAYS * DAY_MS) return 'trial';
+  if (profile.trialStart && typeof profile.trialStart === 'number' &&
+      Date.now() < profile.trialStart + TRIAL_DAYS * DAY_MS) return 'trial';
   return 'free';
 }
 
 function trialDaysLeft() {
-  if (!profile.trialStart) return TRIAL_DAYS;
+  if (!profile.trialStart || typeof profile.trialStart !== 'number') return TRIAL_DAYS;
   const ms = (profile.trialStart + TRIAL_DAYS * DAY_MS) - Date.now();
   return Math.max(0, Math.ceil(ms / DAY_MS));
 }
@@ -112,12 +136,11 @@ function bumpMsgCount() {
   persist();
 }
 
-
 // ══ ONBOARDING ════════════════════════════════════════
 window.onload = function() {
   renderObDots();
   buildObSecs();
-  
+
   if (profile.name && profile.name.length > 0) {
     ensureTrialStarted();
     document.getElementById('ob').style.display = 'none';
@@ -157,45 +180,35 @@ function renderObDots() {
 }
 
 function obGo(d) {
-  // Validação na primeira tela
   if (d > 0 && obIdx === 0) {
     const input = document.getElementById('obName');
     const n = input ? input.value.trim() : '';
-    if (!n || n.length === 0) {
-      alert('Por favor, digite seu nome para continuar!');
-      return;
-    }
+    if (!n) { showToast('Digite seu nome para continuar!'); return; }
     profile.name = n;
   }
-  
-  // Salvar setores na segunda tela
   if (d > 0 && obIdx === 1) {
     profile.sectors = obSels.slice();
   }
 
-  // Avançar ou voltar
   obIdx = obIdx + d;
   if (obIdx < 0) obIdx = 0;
   if (obIdx > 3) obIdx = 3;
 
-  // Mover slides
   const track = document.getElementById('obTrack');
   if (track) track.style.transform = 'translateX(-' + (obIdx * 100) + '%)';
-  
-  // Botão voltar
+
   const skip = document.getElementById('obSkip');
   if (skip) skip.style.visibility = obIdx > 0 ? 'visible' : 'hidden';
 
-  // Botão próximo
   const nb = document.getElementById('obNext');
   if (nb) {
     if (obIdx === 3) {
-      nb.textContent = 'Entrar →';
+      nb.innerHTML = 'Começar <span class="ob-next-arrow">→</span>';
       nb.onclick = startApp;
       const rh = document.getElementById('obReadyH');
       if (rh) rh.textContent = 'Olá, ' + profile.name + '!';
     } else {
-      nb.textContent = 'Próximo';
+      nb.innerHTML = 'Próximo <span class="ob-next-arrow">→</span>';
       nb.onclick = function() { obGo(1); };
     }
   }
@@ -225,15 +238,15 @@ function initApp() {
     const n = tasks.filter(function(t) { return t.date === today() && !t.done; }).length;
     const urg = tasks.filter(function(t) { return t.date === today() && !t.done && t.priority === 'high'; }).length;
     const firstTime = !localStorage.getItem('ella_welcomed');
-    let msg = g + ', <strong>' + profile.name + '</strong>! 🌿<br><br>';
+    let msg = g + ', <strong>' + profile.name + '</strong>!<br><br>';
     if (firstTime && getPlan() === 'trial') {
       msg = '🎁 <strong>' + profile.name + '</strong>, você desbloqueou <strong>15 dias de Ella Pro</strong> — sem cartão!<br><br>' +
-            'Aproveita tudo: voz, IA sem limite, todos os 8 setores, notificações.<br><br>' +
-            'Me conta, o que tá na sua cabeça hoje?';
+            'Aproveita tudo: voz, IA sem limite, todos os setores, notificações.<br><br>' +
+            'Me conta, o que está na sua cabeça hoje?';
       localStorage.setItem('ella_welcomed', '1');
     } else {
       msg += 'Você tem <strong>' + n + ' tarefa' + (n !== 1 ? 's' : '') + '</strong> para hoje';
-      if (urg > 0) msg += ' — <span style="color:#E53935;font-weight:600">' + urg + ' urgente' + (urg > 1 ? 's' : '') + ' 🔴</span>';
+      if (urg > 0) msg += ' — <span style="color:#E53935;font-weight:600">' + urg + ' urgente' + (urg > 1 ? 's' : '') + '</span>';
       msg += '.<br><br>Me conta o que mais está na cabeça!';
       if (getPlan() === 'free') {
         const left = msgsTodayLeft();
@@ -251,14 +264,15 @@ function goView(v) {
   document.querySelectorAll('.bnav-btn').forEach(function(e) { e.classList.remove('on'); });
   const view = document.getElementById('v-' + v);
   if (view) view.classList.add('on');
-  const map = {chat:0, check:1, cal:2, mkt:3, plans:4};
+  // 4 tabs: chat=0, check=1, cal=2, plans=3
+  const map = {chat:0, check:1, cal:2, plans:3};
   if (map[v] !== undefined) {
     const btns = document.querySelectorAll('.bnav-btn');
     if (btns[map[v]]) btns[map[v]].classList.add('on');
   }
   if (v === 'check') drawCheck();
   if (v === 'cal') drawCal();
-  if (v === 'mkt') drawMkt();
+  if (v === 'lists') drawLists();
   if (v === 'profile') loadProf();
   if (v === 'plans') drawPlans();
   renderTrialBadge();
@@ -274,10 +288,7 @@ function toggleSearch() {
   if (!bar) return;
   const vis = bar.style.display === 'none' || bar.style.display === '';
   bar.style.display = vis ? '' : 'none';
-  if (vis) {
-    const si = document.getElementById('searchInput');
-    if (si) si.focus();
-  }
+  if (vis) { const si = document.getElementById('searchInput'); if (si) si.focus(); }
 }
 
 function doSearch(q) {
@@ -352,10 +363,7 @@ async function sendChat() {
   if (!inp) return;
   const txt = inp.value.trim();
   if (!txt) return;
-  if (getPlan() === 'free' && msgsTodayLeft() <= 0) {
-    showUpsell('msg');
-    return;
-  }
+  if (getPlan() === 'free' && msgsTodayLeft() <= 0) { showUpsell('msg'); return; }
   if (getPlan() === 'free') {
     bumpMsgCount();
     const left = msgsTodayLeft();
@@ -366,12 +374,35 @@ async function sendChat() {
   addMsg('user', txt.replace(/\n/g, '<br>'));
   chatHist.push({role:'user', content:txt});
   showTyping();
-  
+
+  // ── Datas de referência para a IA ──
+  const td = today();
+  const tomorrowDate = addDays(td, 1);
+  const dayAfter = addDays(td, 2);
   const tl = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
-  const activeSecs = profile.sectors.map(function(k) { return (SECTORS[k] ? SECTORS[k].i + ' ' + SECTORS[k].l : k) + ' (key:"' + k + '")'; }).join(', ');
+  const activeSecs = profile.sectors.map(function(k) {
+    return (SECTORS[k] ? SECTORS[k].i + ' ' + SECTORS[k].l : k) + ' (key:"' + k + '")';
+  }).join(', ');
   const snap = JSON.stringify(tasks.slice(-20));
-  const sys = 'Você é Ella, assistente pessoal calorosa para mulheres multitarefas.\nHoje: ' + tl + ' (' + today() + '). Setores ativos: ' + activeSecs + '. Tarefas: ' + snap + '\nREGRAS:\n- Português brasileiro, tom acolhedor e prático\n- Ao identificar tarefas inclua ao FIM: <tasks>[{"title":"...","sector":"key","date":"YYYY-MM-DD","time":"HH:MM ou vazio","priority":"high|med|low","notifMin":numero_ou_vazio,"recur":"daily|weekly|monthly|vazio"}]</tasks>\n- priority: high=urgente, med=atenção, low=tranquila\n- Use apenas setores ativos. Sem <tasks> se não houver tarefas novas. Seja breve e gentil.';
-  
+
+  const sys = 'Você é Ella, assistente pessoal calorosa para mulheres multitarefas.\n' +
+    'DATAS DE REFERÊNCIA:\n' +
+    '- Hoje = ' + td + ' (' + tl + ')\n' +
+    '- Amanhã = ' + tomorrowDate + '\n' +
+    '- Depois de amanhã = ' + dayAfter + '\n' +
+    'Setores ativos: ' + activeSecs + '\n' +
+    'Tarefas recentes: ' + snap + '\n' +
+    'REGRAS:\n' +
+    '- Português brasileiro, tom acolhedor e prático\n' +
+    '- CRÍTICO: datas SEMPRE no formato YYYY-MM-DD. Use as datas de referência acima exatamente.\n' +
+    '- "amanhã" = ' + tomorrowDate + ' (NUNCA use ' + td + ' para tarefas de amanhã)\n' +
+    '- Ao identificar tarefas inclua ao FIM da resposta:\n' +
+    '  <tasks>[{"title":"...","sector":"key","date":"YYYY-MM-DD","time":"HH:MM ou vazio","priority":"high|med|low","notifMin":numero_ou_null,"recur":"daily|weekly|monthly|null"}]</tasks>\n' +
+    '- priority: high=urgente, med=importante, low=sem urgência\n' +
+    '- Se usuário mencionar uma lista (compras, tarefas, etc.), inclua também:\n' +
+    '  <lists>[{"name":"Nome da lista","items":["item1","item2",...]}]</lists>\n' +
+    '- Use apenas setores ativos. Sem <tasks> se não houver tarefas novas. Seja breve e gentil.';
+
   try {
     const r = await fetch('/api/chat', {
       method: 'POST',
@@ -381,25 +412,63 @@ async function sendChat() {
     const data = await r.json();
     hideTyping();
     if (!r.ok || data.error) {
-      addMsg('ella', 'Erro da IA: ' + (data.error || data.error_description || JSON.stringify(data)));
+      addMsg('ella', 'Erro da IA: ' + (data.error || JSON.stringify(data)));
       return;
     }
     const full = (data.content || []).map(function(b) { return b.text || ''; }).join('');
-    if (!full) { addMsg('ella', 'Ops! Resposta vazia da IA. Tente novamente. 💕'); return; }
+    if (!full) { addMsg('ella', 'Ops! Resposta vazia. Tente novamente. 💕'); return; }
     chatHist.push({role:'assistant', content:full});
-    const match = full.match(/<tasks>([\s\S]*?)<\/tasks>/);
+
+    // Extrair e salvar tarefas
+    const taskMatch = full.match(/<tasks>([\s\S]*?)<\/tasks>/);
     let added = [];
-    if (match) {
+    if (taskMatch) {
       try {
-        JSON.parse(match[1]).forEach(function(t) {
-          const item = {id: Date.now() + Math.floor(Math.random()*999), title:t.title, sector:t.sector||'casa', date:t.date||today(), time:t.time||'', done:false, priority:t.priority||'low', notifMin:t.notifMin||'', recur:t.recur||''};
-          tasks.push(item); added.push(item);
+        JSON.parse(taskMatch[1]).forEach(function(t) {
+          // Garantir que a data seja válida e no futuro se necessário
+          let taskDate = t.date || td;
+          if (!taskDate.match(/^\d{4}-\d{2}-\d{2}$/)) taskDate = td;
+          const item = {
+            id: Date.now() + Math.floor(Math.random()*9999),
+            title: t.title,
+            sector: t.sector || 'casa',
+            date: taskDate,
+            time: t.time || '',
+            done: false,
+            priority: t.priority || 'low',
+            notifMin: t.notifMin || '',
+            recur: t.recur || ''
+          };
+          tasks.push(item);
+          added.push(item);
         });
         persist(); schedNotifs();
       } catch(e) {}
     }
-    addMsg('ella', full.replace(/<tasks>[\s\S]*?<\/tasks>/g, '').trim().replace(/\n/g, '<br>'), added);
-    if (added.length) showToast(added.length + ' tarefa' + (added.length > 1 ? 's' : '') + ' salva' + (added.length > 1 ? 's' : '') + '! 🌸');
+
+    // Extrair e salvar listas
+    const listMatch = full.match(/<lists>([\s\S]*?)<\/lists>/);
+    if (listMatch) {
+      try {
+        JSON.parse(listMatch[1]).forEach(function(lst) {
+          const newList = {
+            id: Date.now() + Math.floor(Math.random()*9999),
+            name: lst.name || 'Lista',
+            items: (lst.items || []).map(function(it, idx) {
+              return {id: Date.now() + idx + Math.floor(Math.random()*999), text: it, done: false};
+            }),
+            createdAt: Date.now()
+          };
+          lists.push(newList);
+        });
+        persist();
+        showToast('Lista salva! Veja em Planos > Listas 📋');
+      } catch(e) {}
+    }
+
+    const clean = full.replace(/<tasks>[\s\S]*?<\/tasks>/g, '').replace(/<lists>[\s\S]*?<\/lists>/g, '').trim();
+    addMsg('ella', clean.replace(/\n/g, '<br>'), added);
+    if (added.length) showToast(added.length + ' tarefa' + (added.length > 1 ? 's' : '') + ' salva' + (added.length > 1 ? 's' : '') + '! ✓');
   } catch(e) { hideTyping(); addMsg('ella', 'Erro de conexão: ' + e.message); }
 }
 
@@ -430,12 +499,38 @@ function schedNotifs() {
     const fireAt = dt.getTime() - (parseInt(t.notifMin || profile.notifMin || 15) * 60000);
     const diff = fireAt - now;
     if (diff > 0 && diff < 24*3600000) {
-      notifTimers.push(setTimeout(function() { new Notification('🌿 Ella', {body: t.title + ' em ' + (t.notifMin||15) + ' min'}); }, diff));
+      notifTimers.push(setTimeout(function() {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('ella', {body: t.title + ' em ' + (t.notifMin||15) + ' min', icon: '/icons/icon-192.png'});
+        }
+        // Também mostrar banner in-app
+        showInAppNotif(t);
+      }, diff));
     }
   });
 }
 
-// ══ CHECKLIST ════════════════════════════════════════
+function showInAppNotif(task) {
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:calc(60px + env(safe-area-inset-top));left:12px;right:12px;z-index:800;' +
+    'background:var(--pri);color:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 4px 20px rgba(196,115,106,.4);' +
+    'display:flex;align-items:center;gap:12px;animation:fadeUp .3s ease;cursor:pointer';
+  banner.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;flex-shrink:0"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>' +
+    '<div style="flex:1"><div style="font-size:12px;font-weight:700">' + task.title + '</div>' +
+    '<div style="font-size:11px;opacity:.85">Em ' + (task.notifMin||15) + ' min · ' + (task.time||'') + '</div></div>' +
+    '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0 2px">×</button>';
+  banner.onclick = function(e) { if (e.target.tagName !== 'BUTTON') { goView('check'); banner.remove(); } };
+  document.body.appendChild(banner);
+  setTimeout(function() { if (banner.parentElement) banner.remove(); }, 8000);
+}
+
+// ══ CHECKLIST / HOJE ═════════════════════════════════
+
+function setCheckDay(ds) {
+  checkDay = ds;
+  drawCheck();
+}
+
 function drawCheck() {
   const td = today();
   const now = new Date();
@@ -447,35 +542,70 @@ function drawCheck() {
   const focusRow = document.getElementById('focusRow');
   const chkBody  = document.getElementById('chkBody');
 
-  // ── week strip ──
-  const dateLabel = now.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
-  let weekHtml = '<div class="week-card"><div class="week-label">' +
-    dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1) +
-    '</div><div class="week-row">';
+  // ── cabeçalho com data selecionada ──
+  const selDate = new Date(checkDay + 'T12:00');
+  const dateLabel = selDate.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+  const dateLabelUp = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
+
+  // ── semana clicável ──
+  let weekHtml = '<div class="week-card">' +
+    '<div class="week-label">' + dateLabelUp + '</div>' +
+    '<div class="week-row">';
   for (let i = 0; i < 7; i++) {
-    const d = new Date(now); d.setDate(now.getDate() - dow + i);
-    const isToday = d.toISOString().slice(0,10) === td;
-    weekHtml += '<div class="week-cell' + (isToday ? ' active' : '') + '">' +
+    const d = new Date(now);
+    d.setDate(now.getDate() - dow + i);
+    const ds = d.toISOString().slice(0,10);
+    const isActive = ds === checkDay;
+    const dayTasks = tasks.filter(function(t) { return t.date === ds && !t.done; });
+    const dotHtml = dayTasks.length
+      ? '<div class="week-dot-row">' + dayTasks.slice(0,3).map(function() { return '<div class="week-dot-item"></div>'; }).join('') + '</div>'
+      : '<div class="week-dot-row"></div>';
+    weekHtml += '<div class="week-cell' + (isActive ? ' active' : '') + '" onclick="setCheckDay(\'' + ds + '\')">' +
       '<div class="week-abbr">' + DAYS[d.getDay()] + '</div>' +
-      '<div class="week-num">' + d.getDate() + '</div></div>';
+      '<div class="week-num">' + d.getDate() + '</div>' +
+      dotHtml +
+      '</div>';
   }
   weekHtml += '</div></div>';
 
-  // ── filter tasks for today ──
+  // ── notificação in-app do próximo evento do dia selecionado ──
+  let notifHtml = '';
+  if (checkDay === td) {
+    const nowMs = Date.now();
+    const upcoming = tasks.filter(function(t) {
+      if (t.done || t.date !== td || !t.time) return false;
+      const taskMs = new Date(td + 'T' + t.time).getTime();
+      return taskMs > nowMs && taskMs - nowMs < 2 * 3600000; // próximas 2h
+    }).sort(function(a, b) { return a.time.localeCompare(b.time); });
+    if (upcoming.length) {
+      const next = upcoming[0];
+      const taskMs = new Date(td + 'T' + next.time).getTime();
+      const diffMin = Math.round((taskMs - nowMs) / 60000);
+      notifHtml = '<div class="notif-banner">' +
+        '<div class="notif-banner-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>' +
+        '<div class="notif-banner-body">' +
+        '<div class="notif-banner-title">' + next.title + '</div>' +
+        '<div class="notif-banner-sub">Em ' + diffMin + ' min · ' + next.time + '</div>' +
+        '</div></div>';
+    }
+  }
+
+  // ── filtrar tarefas do dia selecionado ──
   const all = tasks.filter(function(t) {
-    if (t.date === td) return true;
+    if (t.date === checkDay) return true;
     if (t.recur === 'daily') return true;
-    if (t.recur === 'weekly') return new Date(t.date+'T12:00').getDay() === now.getDay();
-    if (t.recur === 'monthly') return parseInt(t.date.slice(8)) === now.getDate();
+    const selD = new Date(checkDay + 'T12:00');
+    if (t.recur === 'weekly') return new Date(t.date + 'T12:00').getDay() === selD.getDay();
+    if (t.recur === 'monthly') return parseInt(t.date.slice(8)) === selD.getDate();
     return false;
   });
 
   const doneCount = all.filter(function(t) { return t.done; }).length;
-  const pct = all.length ? Math.round(doneCount/all.length*100) : 0;
+  const pct = all.length ? Math.round(doneCount / all.length * 100) : 0;
   if (chkProg) chkProg.textContent = doneCount + '/' + all.length;
   if (progFill) progFill.style.width = pct + '%';
 
-  // ── sector filter tabs ──
+  // ── tabs de setor ──
   if (focusRow) {
     let fhtml = '<button class="ftab' + (focusSec===null?' on':'') + '" onclick="setFocus(null)">Tudo</button>';
     profile.sectors.filter(function(k){return SECTORS[k];}).forEach(function(k){
@@ -484,7 +614,7 @@ function drawCheck() {
     focusRow.innerHTML = fhtml;
   }
 
-  // ── sort: pending first (priority→time), done last ──
+  // ── ordenar tarefas ──
   const pri = {high:0, med:1, low:2};
   let list = (focusSec ? all.filter(function(t){return t.sector===focusSec;}) : all.slice())
     .sort(function(a,b){
@@ -493,7 +623,6 @@ function drawCheck() {
       return pd !== 0 ? pd : (a.time||'99:99').localeCompare(b.time||'99:99');
     });
 
-  // ── render pills ──
   function pillHtml(t) {
     const s   = SECTORS[t.sector] || SECTORS.casa;
     const cls = t.done ? 'feita' : (t.priority==='high' ? 'urgente' : t.priority==='med' ? 'atencao' : 'ok');
@@ -516,7 +645,7 @@ function drawCheck() {
   const done    = list.filter(function(t){return t.done;});
 
   if (!list.length) {
-    pillsHtml = '<div class="sec-empty">Nenhuma tarefa para hoje. Que dia livre! ✨</div>';
+    pillsHtml = '<div class="sec-empty">Nenhuma tarefa para este dia. ✨</div>';
   } else {
     if (pending.length) {
       pillsHtml += '<div class="tasks-section-title">Minhas tarefas</div>';
@@ -528,7 +657,7 @@ function drawCheck() {
     }
   }
 
-  if (chkBody) chkBody.innerHTML = weekHtml + pillsHtml;
+  if (chkBody) chkBody.innerHTML = weekHtml + notifHtml + pillsHtml;
 }
 
 function setFocus(k) { focusSec = k; drawCheck(); }
@@ -548,7 +677,7 @@ function drawCal() {
   const y = calRef.getFullYear(), m = calRef.getMonth();
   const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const calTitle = document.getElementById('calTitle');
-  if (calTitle) calTitle.textContent = months[m] + ' ' + y;
+  if (calTitle) calTitle.textContent = months[m].toUpperCase() + ' ' + y;
   const first = new Date(y,m,1).getDay(), last = new Date(y,m+1,0).getDate(), td = today();
   let h = ['D','S','T','Q','Q','S','S'].map(function(d) { return '<div class="cal-dn">' + d + '</div>'; }).join('');
   for (let i = 0; i < first; i++) { const pd = new Date(y,m,-(first-i-1)); h += '<div class="cal-d om"><div class="dnum">' + pd.getDate() + '</div></div>'; }
@@ -590,29 +719,93 @@ function tickCal(id) {
   if(t){t.done=!t.done;persist();drawDayPanel();showToast(t.done?'✅ Concluída!':'↩ Desmarcada');}
 }
 
-// ══ MERCADO ══════════════════════════════════════════
-function drawMkt() {
-  const photos = mktItems.filter(function(m) { return m.photo; });
-  const grid = document.getElementById('mktGrid');
-  if (grid) {
-    grid.innerHTML = photos.map(function(m) {
-      return '<div class="mkt-photo' + (m.done?' done-p':'') + '" onclick="togMkt(' + m.id + ')"><img src="' + m.photo + '" alt="' + m.title + '"></div>';
-    }).join('') + '<div class="mkt-photo add" onclick="document.getElementById(\'photoInput\').click()">+</div>';
+// ══ LISTAS ═══════════════════════════════════════════
+function drawLists() {
+  const body = document.getElementById('lstBody');
+  if (!body) return;
+  if (!lists.length) {
+    body.innerHTML = '<div class="lst-empty"><div class="lst-empty-ico">📋</div>' +
+      '<div>Nenhuma lista ainda.<br>Fale para a Ella criar uma ou toque em +</div></div>';
+    return;
   }
-  const txtItems = mktItems.filter(function(m) { return !m.photo; });
-  const list = document.getElementById('mktList');
-  if (!list) return;
-  if (!txtItems.length) { list.innerHTML = '<div class="sec-empty">Nenhum item de texto</div>'; return; }
-  list.innerHTML = txtItems.map(function(m) {
-    return '<div class="chk-card' + (m.done?' feita':'') + '"><div class="chk-row"><div class="chkbox' + (m.done?' on':'') + '" onclick="togMkt(' + m.id + ')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="chk-lbl' + (m.done?' done':'') + '">' + m.title + '</div><button class="chk-edit" onclick="delMkt(' + m.id + ')">✕</button></div></div>';
+  body.innerHTML = lists.map(function(lst) {
+    const total = (lst.items||[]).length;
+    const done  = (lst.items||[]).filter(function(i){return i.done;}).length;
+    return '<div class="lst-card">' +
+      '<div class="lst-card-head">' +
+        '<div class="lst-card-name">' + lst.name + '</div>' +
+        '<div class="lst-card-meta">' + done + '/' + total + '</div>' +
+      '</div>' +
+      (lst.items||[]).map(function(item) {
+        return '<div class="lst-item">' +
+          '<div class="lst-chkbox' + (item.done?' on':'') + '" onclick="togListItem(' + lst.id + ',' + item.id + ')">' +
+            '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</div>' +
+          '<div class="lst-item-txt' + (item.done?' done':'') + '">' + item.text + '</div>' +
+          '<button class="lst-del" onclick="delListItem(' + lst.id + ',' + item.id + ')">×</button>' +
+        '</div>';
+      }).join('') +
+      '<div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border-s)">' +
+        '<button style="flex:1;padding:8px;border:1.5px dashed var(--border);border-radius:8px;background:none;font-family:\'DM Sans\',sans-serif;font-size:12px;color:var(--text-m);cursor:pointer" onclick="addItemToList(' + lst.id + ')">+ Item</button>' +
+        '<button style="padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;background:none;font-family:\'DM Sans\',sans-serif;font-size:12px;color:var(--red);cursor:pointer" onclick="deleteList(' + lst.id + ')">Apagar</button>' +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 
-function openMktAdd() { pendingPhoto = null; const mt = document.getElementById('mktTxt'); if(mt) mt.value=''; const pn = document.getElementById('photoName'); if(pn) pn.textContent=''; const mm = document.getElementById('mktModal'); if(mm) mm.classList.add('open'); }
-function handlePhoto(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = function(ev) { pendingPhoto = ev.target.result; const pn = document.getElementById('photoName'); if(pn) pn.textContent = '📷 ' + f.name; }; r.readAsDataURL(f); }
-function saveMktItem() { const mt = document.getElementById('mktTxt'); const title = mt ? mt.value.trim() : ''; if (!title && !pendingPhoto) { showToast('Digite um item ou escolha uma foto!'); return; } mktItems.push({id:Date.now(), title:title||'Item', photo:pendingPhoto||null, done:false}); persist(); closeMod('mktModal'); drawMkt(); pendingPhoto=null; showToast('Item adicionado ✓'); }
-function togMkt(id) { const m = mktItems.find(function(x){return x.id===id;}); if(m){m.done=!m.done;persist();drawMkt();} }
-function delMkt(id) { mktItems = mktItems.filter(function(x){return x.id!==id;}); persist(); drawMkt(); showToast('Removido'); }
+function togListItem(listId, itemId) {
+  const lst = lists.find(function(l){return l.id===listId;});
+  if (!lst) return;
+  const item = (lst.items||[]).find(function(i){return i.id===itemId;});
+  if (item) { item.done = !item.done; persist(); drawLists(); }
+}
+
+function delListItem(listId, itemId) {
+  const lst = lists.find(function(l){return l.id===listId;});
+  if (!lst) return;
+  lst.items = (lst.items||[]).filter(function(i){return i.id!==itemId;});
+  persist(); drawLists();
+}
+
+function deleteList(listId) {
+  lists = lists.filter(function(l){return l.id!==listId;});
+  persist(); drawLists(); showToast('Lista removida');
+}
+
+function addItemToList(listId) {
+  const text = prompt('Nome do item:');
+  if (!text || !text.trim()) return;
+  const lst = lists.find(function(l){return l.id===listId;});
+  if (!lst) return;
+  if (!lst.items) lst.items = [];
+  lst.items.push({id: Date.now(), text: text.trim(), done: false});
+  persist(); drawLists();
+}
+
+function openListAdd() {
+  const ln = document.getElementById('lstName'); if(ln) ln.value='';
+  const li = document.getElementById('lstItems'); if(li) li.value='';
+  const lm = document.getElementById('listModal'); if(lm) lm.classList.add('open');
+}
+
+function saveList() {
+  const ln = document.getElementById('lstName');
+  const li = document.getElementById('lstItems');
+  const name = ln ? ln.value.trim() : '';
+  if (!name) { showToast('Digite o nome da lista!'); return; }
+  const rawItems = li ? li.value.split('\n').map(function(s){return s.trim();}).filter(Boolean) : [];
+  const newList = {
+    id: Date.now(),
+    name: name,
+    items: rawItems.map(function(t, idx) { return {id: Date.now()+idx, text:t, done:false}; }),
+    createdAt: Date.now()
+  };
+  lists.push(newList);
+  persist();
+  closeMod('listModal');
+  drawLists();
+  showToast('Lista criada ✓');
+}
 
 // ══ MODAL TASK ════════════════════════════════════════
 let curSector = 'trabalho';
@@ -679,7 +872,7 @@ function openNew(dateStr) {
   const mh = document.getElementById('mH'); if(mh) mh.textContent = 'Nova tarefa';
   const mt = document.getElementById('mTitle'); if(mt) mt.value = '';
   setMSector(profile.sectors[0] || 'casa');
-  const md = document.getElementById('mDate'); if(md) md.value = dateStr || today();
+  const md = document.getElementById('mDate'); if(md) md.value = dateStr || checkDay || today();
   const mti = document.getElementById('mTime'); if(mti) mti.value = '';
   const mn = document.getElementById('mNotif'); if(mn) mn.value = '';
   const mdel = document.getElementById('mDel'); if(mdel) mdel.style.display = 'none';
@@ -714,11 +907,13 @@ function saveTask() {
   const md = document.getElementById('mDate');
   const mti = document.getElementById('mTime');
   const mn = document.getElementById('mNotif');
+  // Preserva a data digitada pelo usuário, fallback para checkDay ou today
+  const chosenDate = (md && md.value) ? md.value : (checkDay || today());
   const item = {
     id: editId || Date.now(),
     title: title,
     sector: ms ? ms.value : 'casa',
-    date: md ? md.value || today() : today(),
+    date: chosenDate,
     time: mti ? mti.value : '',
     done: false,
     priority: curPri,
@@ -757,21 +952,32 @@ function closeMod(id, e) {
 function updateAvatar() {
   const svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
   const ta = document.getElementById('topAvatar'); if(ta) ta.innerHTML = svg;
-  const pa = document.getElementById('profAv'); if(pa) pa.innerHTML = svg;
+  const pa = document.getElementById('profAv');
+  if (pa) {
+    if (profile.name) {
+      pa.textContent = profile.name.charAt(0).toUpperCase();
+      pa.style.fontFamily = "'DM Serif Display', serif";
+      pa.style.fontStyle = 'normal';
+    } else {
+      pa.innerHTML = svg;
+    }
+  }
 }
 
 function loadProf() {
   const pn = document.getElementById('pName'); if(pn) pn.value = profile.name||'';
   const pc = document.getElementById('pCity'); if(pc) pc.value = profile.city||'';
   const pnb = document.getElementById('profNameBig'); if(pnb) pnb.textContent = profile.name||'Meu perfil';
-  const tn = document.getElementById('togN'); if(tn && !profile.togN) tn.classList.remove('on');
+  const tn = document.getElementById('togN'); if(tn) { if(profile.togN===false) tn.classList.remove('on'); else tn.classList.add('on'); }
   const pno = document.getElementById('pNotif'); if(pno) pno.value = profile.notifMin||15;
   const sg = document.getElementById('secGrid');
   if (sg) {
     sg.innerHTML = Object.entries(SECTORS).map(function(entry) {
       const k = entry[0], s = entry[1];
       const on = profile.sectors.indexOf(k) > -1;
-      return '<div class="sec-pill' + (on?' on':'') + '" onclick="togSecP(\'' + k + '\')">' + s.i + ' ' + s.l + '</div>';
+      return '<div class="sec-pill' + (on?' on':'') + '" onclick="togSecP(\'' + k + '\')" style="display:flex;align-items:center;gap:8px">' +
+        '<span style="width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:' + s.c + '">' + s.svg + '</span>' +
+        s.l + '</div>';
     }).join('');
   }
 }
@@ -781,8 +987,7 @@ function togSecP(k) {
   if (i > -1) { if (profile.sectors.length > 1) profile.sectors.splice(i,1); }
   else {
     if (getPlan() === 'free' && profile.sectors.length >= FREE_SECTORS_LIMIT) {
-      showUpsell('sector');
-      return;
+      showUpsell('sector'); return;
     }
     profile.sectors.push(k);
   }
@@ -800,48 +1005,36 @@ function saveProfile() {
 
 // ══ UPSELL MODAL ═════════════════════════════════════
 const UPSELLS = {
-  voice: {
-    icon: '🎙',
-    title: 'A voz é Pro',
-    sub: 'Você ainda pode digitar — mas com Pro a Ella te ouve. Mais rápido nas correrias do dia.'
-  },
-  msg: {
-    icon: '💬',
-    title: 'Limite diário atingido',
-    sub: 'Você usou suas 5 mensagens grátis de hoje. Com Pro, conversa sem limite.'
-  },
-  sector: {
-    icon: '🗂',
-    title: 'Mais setores é Pro',
-    sub: 'No Grátis são 3 setores. Com Pro você organiza trabalho, casa, família, saúde, finanças, estudos, social e meu tempo — tudo junto.'
-  }
+  voice:  { icon:'🎙', title:'A voz é Pro', sub:'Você ainda pode digitar — mas com Pro a Ella te ouve. Mais rápido nas correrias do dia.' },
+  msg:    { icon:'💬', title:'Limite diário atingido', sub:'Você usou suas 5 mensagens grátis de hoje. Com Pro, conversa sem limite.' },
+  sector: { icon:'🗂', title:'Mais setores é Pro', sub:'No Grátis são 3 setores. Com Pro você organiza trabalho, casa, família, saúde, finanças, estudos, social e meu tempo.' }
 };
 
 function showUpsell(type) {
   const data = UPSELLS[type] || UPSELLS.voice;
   const ic = document.getElementById('upsellIcon');
-  const t = document.getElementById('upsellTitle');
-  const s = document.getElementById('upsellSub');
+  const t  = document.getElementById('upsellTitle');
+  const s  = document.getElementById('upsellSub');
   if (ic) ic.textContent = data.icon;
-  if (t) t.textContent = data.title;
-  if (s) s.textContent = data.sub;
+  if (t)  t.textContent  = data.title;
+  if (s)  s.textContent  = data.sub;
   const el = document.getElementById('upsellModal');
   if (el) el.classList.add('open');
 }
 
 function showTrialModal(kind) {
   const ic = document.getElementById('trialIcon');
-  const t = document.getElementById('trialTitle');
-  const s = document.getElementById('trialSub');
+  const t  = document.getElementById('trialTitle');
+  const s  = document.getElementById('trialSub');
   if (kind === 'ending') {
     const d = trialDaysLeft();
     if (ic) ic.textContent = d === 1 ? '🔥' : '⏰';
-    if (t) t.textContent = d === 1 ? 'Último dia do Pro' : 'Faltam ' + d + ' dias';
-    if (s) s.textContent = 'Seu Ella Pro acaba ' + (d === 1 ? 'hoje' : 'em breve') + '. Sem ativar, você volta pro plano Grátis — com limites.';
+    if (t)  t.textContent  = d === 1 ? 'Último dia do Pro' : 'Faltam ' + d + ' dias';
+    if (s)  s.textContent  = 'Seu Ella Pro acaba ' + (d === 1 ? 'hoje' : 'em breve') + '. Sem ativar, você volta pro plano Grátis.';
   } else {
     if (ic) ic.textContent = '🌸';
-    if (t) t.textContent = 'Seus 15 dias acabaram';
-    if (s) s.textContent = 'Agora você está no plano Grátis. Tudo continua funcionando, com limites. Quando quiser tudo de volta, é só ativar Pro.';
+    if (t)  t.textContent  = 'Seus 15 dias acabaram';
+    if (s)  s.textContent  = 'Agora você está no plano Grátis. Tudo continua funcionando, com limites.';
   }
   const el = document.getElementById('trialModal');
   if (el) el.classList.add('open');
@@ -871,10 +1064,9 @@ function renderTrialBadge() {
     const urgent = d <= 3;
     el.style.display = 'flex';
     el.className = 'trial-badge' + (urgent ? ' urgent' : '');
-    el.innerHTML = '<span style="font-size:13px">✨</span><span>' + d + ' ' + (d === 1 ? 'dia' : 'dias') + ' Pro</span>';
+    el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' +
+      '<span>' + d + ' ' + (d === 1 ? 'dia' : 'dias') + ' Pro</span>';
     el.onclick = function() { goView('plans'); };
-  } else if (plan === 'pro') {
-    el.style.display = 'none';
   } else {
     el.style.display = 'none';
   }
@@ -883,32 +1075,31 @@ function renderTrialBadge() {
 // ══ PLANS VIEW ═══════════════════════════════════════
 function drawPlans() {
   const plan = getPlan();
-  const banner = document.getElementById('trialBanner');
-  const sub = document.getElementById('plansSub');
+  const banner  = document.getElementById('trialBanner');
+  const sub     = document.getElementById('plansSub');
   const freeTag = document.getElementById('freeTag');
-  const proTag = document.getElementById('proTag');
+  const proTag  = document.getElementById('proTag');
   if (!banner) return;
 
   if (plan === 'trial') {
     const d = trialDaysLeft();
-    banner.innerHTML = '<div style="background:linear-gradient(135deg,#C47B7B,#9A5050);color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:22px;text-align:center;box-shadow:0 4px 18px rgba(196,123,123,.35)">' +
-      '<div style="font-size:12px;font-weight:600;opacity:.85;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">✨ Você está no Pro</div>' +
-      '<div style="font-family:\'DM Serif Display\',serif;font-size:32px;line-height:1.1;margin-bottom:4px">' + d + ' dia' + (d !== 1 ? 's' : '') + '</div>' +
-      '<div style="font-size:13px;opacity:.9">grátis · sem cartão</div>' +
-      '</div>';
+    banner.innerHTML = '<div style="background:var(--pri);color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:22px;text-align:center;box-shadow:0 4px 18px rgba(196,115,106,.35)">' +
+      '<div style="font-size:11px;font-weight:700;opacity:.85;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">✨ Você está no Pro</div>' +
+      '<div style="font-family:\'DM Serif Display\',serif;font-size:36px;line-height:1.1;margin-bottom:4px">' + d + ' dia' + (d !== 1 ? 's' : '') + '</div>' +
+      '<div style="font-size:13px;opacity:.9">grátis · sem cartão</div></div>';
     if (sub) sub.innerHTML = 'Aproveite tudo até o fim do teste.<br>Depois você escolhe.';
     if (freeTag) freeTag.innerHTML = '';
-    if (proTag) proTag.innerHTML = 'ATIVO AGORA';
+    if (proTag)  proTag.innerHTML  = 'ATIVO AGORA';
   } else if (plan === 'pro') {
     banner.innerHTML = '<div style="background:#F0FAF4;color:#2E7D4F;border:1px solid #B8E0C4;border-radius:14px;padding:14px 18px;margin-bottom:22px;text-align:center;font-size:13px;font-weight:600">💚 Você é Pro · obrigada!</div>';
     if (sub) sub.innerHTML = '';
     if (freeTag) freeTag.innerHTML = '';
-    if (proTag) proTag.innerHTML = 'SEU PLANO';
+    if (proTag)  proTag.innerHTML  = 'SEU PLANO';
   } else {
     banner.innerHTML = '';
     if (sub) sub.innerHTML = 'O grátis funciona — mas com a Pro você libera tudo.';
     if (freeTag) freeTag.innerHTML = '<div class="plan-tag" style="background:#EDE0D4;color:#2C2C2C">SEU PLANO</div>';
-    if (proTag) proTag.innerHTML = 'RECOMENDADO';
+    if (proTag)  proTag.innerHTML  = 'RECOMENDADO';
   }
 }
 
@@ -921,5 +1112,4 @@ function showToast(msg) {
   setTimeout(function() { el.classList.remove('show'); }, 2500);
 }
 
-// Compatibilidade com chamadas antigas
 function toast(msg) { showToast(msg); }

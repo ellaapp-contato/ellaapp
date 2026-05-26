@@ -6,59 +6,183 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Ella">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#F5EDE4">
   <title>Ella — Sua Assistente Pessoal</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <!-- ONBOARDING -->
 <div class="ob" id="ob">
+
+  <!-- Logo header fixa no topo do onboarding -->
+  <div class="ob-logo-header">
+    <div class="ob-logo-wrap">
+      <span class="ob-logo-brain">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 22V16C8 9.5 10 5 16 5C22 5 24 9.5 24 16V22H8Z"/>
+          <path d="M12 22V25H20V22"/>
+          <path d="M10 13C11.2 11.4 12.8 11.4 12.8 13C12.8 11.4 14.2 11.4 14.2 13C14.2 11.4 15.8 11.4 15.8 13C15.8 11.4 17.2 11.4 17.2 13C17.2 11.4 18.8 11.4 18.8 13"/>
+          <path d="M10 17.5C11.2 15.9 12.8 15.9 12.8 17.5C12.8 15.9 14.2 15.9 14.2 17.5C14.2 15.9 15.8 15.9 15.8 17.5C15.8 15.9 17.2 15.9 17.2 17.5C17.2 15.9 18.8 15.9 18.8 17.5"/>
+          <line x1="16" y1="5" x2="16" y2="2.5"/>
+          <line x1="11.5" y1="6.2" x2="9.5" y2="3.8"/>
+          <line x1="20.5" y1="6.2" x2="22.5" y2="3.8"/>
+          <line x1="8" y1="14.5" x2="5.5" y2="13.5"/>
+          <line x1="24" y1="14.5" x2="26.5" y2="13.5"/>
+        </svg>
+      </span>
+      <span class="ob-logo-ella">ella</span>
+      <span class="ob-logo-list">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="3" width="22" height="27" rx="2"/>
+          <line x1="9" y1="11" x2="19" y2="11"/>
+          <line x1="9" y1="17" x2="19" y2="17"/>
+          <line x1="9" y1="23" x2="16" y2="23"/>
+          <polyline points="21 9.5 22.5 11.5 25.5 8.5"/>
+          <polyline points="21 15.5 22.5 17.5 25.5 14.5"/>
+          <polyline points="21 21.5 22.5 23.5 25.5 20.5"/>
+        </svg>
+      </span>
+    </div>
+    <div class="ob-logo-sub">· ORGANIZAÇÃO INTELIGENTE ·</div>
+  </div>
+
   <div class="ob-track" id="obTrack">
 
+    <!-- Slide 1 -->
     <div class="ob-slide">
-      <div class="ob-num">1 de 4</div>
-      <div class="ob-icon">🌿</div>
+      <div class="ob-num">1 DE 4</div>
+      <div class="ob-icon-svg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          <circle cx="9" cy="11" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
       <div class="ob-h">Olá. Eu sou a Ella.</div>
-      <div class="ob-p">Sua assistente pessoal. Aqui você organiza tudo — do trabalho à sua própria paz de espírito.</div>
-      <input class="ob-input" id="obName" type="text" placeholder="Como posso te chamar?">
+      <div class="ob-p">Eu organizo tarefas, compromissos e lembretes para você.</div>
+      <input class="ob-input" id="obName" type="text" placeholder="Como posso te chamar?" autocomplete="given-name">
     </div>
 
+    <!-- Slide 2 -->
     <div class="ob-slide">
-      <div class="ob-num">2 de 4</div>
-      <div class="ob-icon">🗂</div>
+      <div class="ob-num">2 DE 4</div>
+      <div class="ob-icon-svg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+        </svg>
+      </div>
       <div class="ob-h">Escolha seus setores</div>
       <div class="ob-p">Selecione as áreas da sua vida agora. Você pode mudar depois.</div>
       <div class="ob-sectors" id="obSectors"></div>
     </div>
 
+    <!-- Slide 3 -->
     <div class="ob-slide">
-      <div class="ob-num">3 de 4</div>
-      <div class="ob-icon">💬</div>
+      <div class="ob-num">3 DE 4</div>
+      <div class="ob-icon-svg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="2" width="16" height="20" rx="2"/>
+          <line x1="8" y1="8" x2="13" y2="8"/>
+          <line x1="8" y1="12" x2="13" y2="12"/>
+          <line x1="8" y1="16" x2="11" y2="16"/>
+          <polyline points="15 6.5 16.5 8.5 19 6"/>
+          <polyline points="15 10.5 16.5 12.5 19 10"/>
+          <polyline points="15 14.5 16.5 16.5 19 14"/>
+        </svg>
+      </div>
       <div class="ob-h">Fale. A Ella organiza.</div>
-      <div class="ob-p">
-        <em>"Pagar fatura sexta"</em><br><br>
-        <em>"Buscar a Maria às 17h"</em><br><br>
-        <em>"Meditação todo dia às 7h"</em><br><br>
-        Basta falar ou digitar. A Ella entende, categoriza e lembra.
+      <div class="ob-examples">
+        <div class="ob-example">
+          <div class="ob-example-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          "Pagar fatura sexta"
+        </div>
+        <div class="ob-example">
+          <div class="ob-example-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          "Buscar a Maria às 17h"
+        </div>
+        <div class="ob-example">
+          <div class="ob-example-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          "Academia às 7h"
+        </div>
+      </div>
+      <div class="ob-p" style="margin-top:16px">Basta falar ou digitar. A Ella entende, categoriza e lembra.</div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="ob-slide">
+      <div class="ob-num">4 DE 4</div>
+      <div class="ob-icon-svg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <!-- large sparkle -->
+          <path d="M12 3C12 3 10.8 8.2 12 12C13.2 8.2 12 3 12 3Z"/>
+          <path d="M12 21C12 21 10.8 15.8 12 12C13.2 15.8 12 21 12 21Z"/>
+          <path d="M3 12C3 12 8.2 10.8 12 12C8.2 13.2 3 12 3 12Z"/>
+          <path d="M21 12C21 12 15.8 10.8 12 12C15.8 13.2 21 12 21 12Z"/>
+          <!-- small sparkle top-right -->
+          <path d="M18.5 4C18.5 4 17.8 6.2 18.5 7.5C19.2 6.2 18.5 4 18.5 4Z"/>
+          <path d="M18.5 11C18.5 11 17.8 8.8 18.5 7.5C19.2 8.8 18.5 11 18.5 11Z"/>
+          <path d="M15.5 7.5C15.5 7.5 17.7 6.8 18.5 7.5C17.7 8.2 15.5 7.5 15.5 7.5Z"/>
+          <path d="M21.5 7.5C21.5 7.5 19.3 6.8 18.5 7.5C19.3 8.2 21.5 7.5 21.5 7.5Z"/>
+        </svg>
+      </div>
+      <div class="ob-h" id="obReadyH">Tudo pronto!</div>
+      <div class="ob-p">Sua vida organizada começa agora.</div>
+      <div class="ob-features">
+        <div class="ob-feature">
+          <div class="ob-feat-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <div>
+            <div class="ob-feat-h">Pendências organizadas</div>
+            <div class="ob-feat-s">Nada importante fica para trás.</div>
+          </div>
+        </div>
+        <div class="ob-feature">
+          <div class="ob-feat-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          </div>
+          <div>
+            <div class="ob-feat-h">Prioridades claras</div>
+            <div class="ob-feat-s">Você sabe o que realmente importa.</div>
+          </div>
+        </div>
+        <div class="ob-feature">
+          <div class="ob-feat-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <div class="ob-feat-h">Rotina no controle</div>
+            <div class="ob-feat-s">Mais foco, menos estresse.</div>
+          </div>
+        </div>
+        <div class="ob-feature">
+          <div class="ob-feat-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div>
+            <div class="ob-feat-h">Nada importante fica para trás</div>
+            <div class="ob-feat-s">A Ella lembra para você.</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="ob-slide">
-      <div class="ob-num">4 de 4</div>
-      <div class="ob-icon">✨</div>
-      <div class="ob-h" id="obReadyH">Tudo pronto!</div>
-      <div class="ob-p" id="obReadyP">Sua vida organizada começa agora. A Ella está sempre aqui.</div>
-    </div>
-
   </div>
+
   <div class="ob-bar">
+    <button class="ob-next" id="obNext" onclick="obGo(1)">Próximo <span class="ob-next-arrow">→</span></button>
     <div class="ob-dots" id="obDots"></div>
-    <button class="ob-skip" id="obSkip" onclick="obGo(-1)">Voltar</button>
-    <button class="ob-next" id="obNext" onclick="obGo(1)">Próximo</button>
   </div>
 </div>
 
@@ -83,13 +207,13 @@
   <div class="semaforo-bar">
     <div class="sem-item"><span class="sem-ico" style="color:#E53935"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div class="sem-lbl">Urgente</div></div>
     <div class="sem-sep"></div>
-    <div class="sem-item"><span class="sem-ico" style="color:#F9A825"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span><div class="sem-lbl">Importante</div></div>
+    <div class="sem-item"><span class="sem-ico" style="color:#C49A3C"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span><div class="sem-lbl">Importante</div></div>
     <div class="sem-sep"></div>
     <div class="sem-item"><span class="sem-ico" style="color:#43A047"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.96c1.4 9.3-3.6 19.4-8.2 17.04zM2 21c0-3 1.85-5.36 5.08-6"/></svg></span><div class="sem-lbl">Sem urgência</div></div>
     <div class="sem-sep"></div>
     <div class="sem-item"><span class="sem-ico" style="color:#9E9E9E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><div class="sem-lbl">Concluída</div></div>
     <div style="flex:1"></div>
-    <button class="add-quick-btn" onclick="openNew()">+ Nova tarefa</button>
+    <button class="add-quick-btn" onclick="openNew()">+ Nova</button>
   </div>
 
   <!-- VIEWS -->
@@ -106,7 +230,6 @@
   <div class="view" id="v-check">
     <div class="chk-scroll">
       <div class="chk-top">
-        <div class="chk-title" id="chkTitle"></div>
         <div class="chk-prog-txt" id="chkProg"></div>
       </div>
       <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
@@ -127,42 +250,51 @@
     </div>
   </div>
 
-  <div class="view" id="v-mkt">
-    <div class="mkt-scroll">
-      <div class="mkt-title">Lista de Mercado</div>
-      <div class="mkt-photo-grid" id="mktGrid"></div>
-      <div class="mkt-list-title">Lista de texto</div>
-      <div id="mktList"></div>
+  <!-- LISTAS (substituiu Mercado) -->
+  <div class="view" id="v-lists">
+    <div class="lst-scroll">
+      <div class="lst-header">
+        <div class="lst-title">Minhas Listas</div>
+      </div>
+      <div id="lstBody"></div>
     </div>
-    <button class="fab" onclick="openMktAdd()">+</button>
-    <input type="file" accept="image/*" id="photoInput" style="display:none" onchange="handlePhoto(event)">
+    <button class="fab" onclick="openListAdd()">+</button>
   </div>
 
   <div class="view" id="v-profile">
     <div class="prof-scroll">
       <div class="prof-head">
-        <div class="prof-av" id="profAv">e</div>
+        <div class="prof-av" id="profAv"></div>
         <div class="prof-name-big" id="profNameBig">Meu perfil</div>
         <div class="prof-sub">Personalize sua experiência</div>
       </div>
       <div class="pcard">
-        <div class="pcard-title">Dados pessoais</div>
+        <div class="pcard-head">
+          <div class="pcard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="pcard-title">DADOS PESSOAIS</div>
+        </div>
         <div class="pfield"><label>Nome</label><input id="pName" type="text" placeholder="Seu nome"></div>
         <div class="pfield"><label>Cidade</label><input id="pCity" type="text" placeholder="Onde você mora?"></div>
       </div>
       <div class="pcard">
-        <div class="pcard-title">Meus setores</div>
+        <div class="pcard-head">
+          <div class="pcard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+          <div class="pcard-title">MEUS SETORES</div>
+        </div>
         <div class="sec-grid" id="secGrid"></div>
       </div>
       <div class="pcard">
-        <div class="pcard-title">Notificações</div>
+        <div class="pcard-head">
+          <div class="pcard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <div class="pcard-title">NOTIFICAÇÕES</div>
+        </div>
         <div class="toggle-row">
           <div class="toggle-info"><div class="toggle-lbl">Lembretes</div><div class="toggle-sub">Avisar antes de compromissos</div></div>
           <button class="tog on" id="togN" onclick="this.classList.toggle('on')"></button>
         </div>
         <div class="toggle-row" style="border:none;padding-top:12px">
           <div class="toggle-info"><div class="toggle-lbl">Antecedência padrão</div></div>
-          <select id="pNotif" class="small-select">
+          <select id="pNotif" class="small-select" style="width:auto">
             <option value="5">5 min</option>
             <option value="10">10 min</option>
             <option value="15" selected>15 min</option>
@@ -180,7 +312,7 @@
     <div class="plans-scroll">
       <div id="trialBanner"></div>
       <div class="plans-h">Planos</div>
-      <div class="plans-sub" id="plansSub">15 dias com tudo liberado, sem cartão.<br>Depois você escolhe.</div>
+      <div class="plans-sub" id="plansSub">Aproveite tudo até o fim do teste.<br>Depois você escolhe.</div>
 
       <div class="plan">
         <div class="plan-top"><div class="plan-name">Grátis</div><div id="freeTag"></div></div>
@@ -189,7 +321,7 @@
         <div class="plan-feat">✓ IA (5 mensagens/dia)</div>
         <div class="plan-feat">✓ 3 setores de vida</div>
         <div class="plan-feat">✓ Agenda e checklist</div>
-        <div class="plan-feat">✓ Lista de mercado</div>
+        <div class="plan-feat">✓ Listas</div>
         <div class="plan-feat off">– Voz (digitar funciona)</div>
         <div class="plan-feat off">– Notificações</div>
         <div class="plan-feat off">– Tarefas recorrentes</div>
@@ -200,12 +332,11 @@
         <div class="plan-price">R$ 9,90<span>/mês</span></div>
         <div class="plan-period">menos que um café · cancele quando quiser</div>
         <div class="plan-feat">✓ <strong>IA ilimitada</strong></div>
+        <div class="plan-feat">✓ <strong>Todos os setores</strong> de vida</div>
         <div class="plan-feat">✓ <strong>Voz</strong> (fale, a Ella ouve)</div>
-        <div class="plan-feat">✓ <strong>Todos os 8 setores</strong></div>
         <div class="plan-feat">✓ Notificações inteligentes</div>
         <div class="plan-feat">✓ Tarefas recorrentes</div>
-        <div class="plan-feat">✓ Relatório semanal IA</div>
-        <div class="plan-feat">✓ Lista de mercado com fotos</div>
+        <div class="plan-feat">✓ Listas automáticas do chat</div>
         <button class="plan-btn pri" onclick="location.href='/api/checkout'">Quero a Ella completa</button>
       </div>
 
@@ -217,7 +348,7 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAV -->
+  <!-- BOTTOM NAV — 4 tabs conforme novo design -->
   <div class="bnav">
     <button class="bnav-btn on" onclick="goView('chat')">
       <div class="bnav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
@@ -230,10 +361,6 @@
     <button class="bnav-btn" onclick="goView('cal')">
       <div class="bnav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
       <div class="bnav-lbl">Agenda</div>
-    </button>
-    <button class="bnav-btn" onclick="goView('mkt')">
-      <div class="bnav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
-      <div class="bnav-lbl">Mercado</div>
     </button>
     <button class="bnav-btn" onclick="goView('plans')">
       <div class="bnav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
@@ -251,7 +378,7 @@
     <div class="mf"><label>Prioridade</label>
       <div class="pri-row">
         <button class="pri-opt" id="priRed" onclick="setPri('high')"><span class="pri-ico" style="color:#E53935"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Urgente</button>
-        <button class="pri-opt" id="priYellow" onclick="setPri('med')"><span class="pri-ico" style="color:#F9A825"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>Importante</button>
+        <button class="pri-opt" id="priYellow" onclick="setPri('med')"><span class="pri-ico" style="color:#C49A3C"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>Importante</button>
         <button class="pri-opt sel-green" id="priGreen" onclick="setPri('low')"><span class="pri-ico" style="color:#43A047"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.96c1.4 9.3-3.6 19.4-8.2 17.04zM2 21c0-3 1.85-5.36 5.08-6"/></svg></span>Sem urgência</button>
       </div>
     </div>
@@ -297,18 +424,17 @@
   </div>
 </div>
 
-<!-- MODAL MERCADO -->
-<div class="modal-ov" id="mktModal" onclick="closeMod('mktModal',event)">
+<!-- MODAL LISTA -->
+<div class="modal-ov" id="listModal" onclick="closeMod('listModal',event)">
   <div class="modal">
-    <div class="modal-h"><span>Adicionar item</span><button class="modal-close" onclick="closeMod('mktModal')">×</button></div>
-    <div class="mf"><label>Item</label><input id="mktTxt" type="text" placeholder="Ex: Arroz 5kg"></div>
-    <div class="mf"><label>Foto (opcional)</label>
-      <button class="photo-btn" onclick="document.getElementById('photoInput').click()">📷 Escolher foto</button>
-      <span id="photoName" style="font-size:11px;color:#888;margin-left:8px"></span>
+    <div class="modal-h"><span>Nova lista</span><button class="modal-close" onclick="closeMod('listModal')">×</button></div>
+    <div class="mf"><label>Nome da lista</label><input id="lstName" type="text" placeholder="Ex: Lista de mercado, Viagem..."></div>
+    <div class="mf"><label>Itens (um por linha)</label>
+      <textarea id="lstItems" placeholder="Arroz&#10;Feijão&#10;Leite" rows="5" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--cream);color:var(--text);outline:none;resize:none;transition:.2s"></textarea>
     </div>
     <div class="modal-btns">
-      <button class="mbtn sec" onclick="closeMod('mktModal')">Cancelar</button>
-      <button class="mbtn pri" onclick="saveMktItem()">Adicionar</button>
+      <button class="mbtn sec" onclick="closeMod('listModal')">Cancelar</button>
+      <button class="mbtn pri" onclick="saveList()">Criar lista</button>
     </div>
   </div>
 </div>
@@ -319,14 +445,14 @@
     <div style="text-align:center">
       <div style="font-size:54px;margin-bottom:6px" id="upsellIcon">🎙</div>
       <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);margin-bottom:8px" id="upsellTitle">Voz é Pro</div>
-      <div style="font-size:14px;color:var(--text-m);margin-bottom:22px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto" id="upsellSub">Você ainda pode digitar — mas com Pro a Ella te ouve. Mais rápido, mais natural.</div>
+      <div style="font-size:14px;color:var(--text-m);margin-bottom:22px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto" id="upsellSub">Você ainda pode digitar — mas com Pro a Ella te ouve.</div>
     </div>
     <div style="background:var(--cream);border-radius:14px;padding:16px 18px;margin-bottom:18px">
-      <div style="font-size:11px;color:var(--rose);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:10px">Ella Pro · R$ 9,90/mês</div>
+      <div style="font-size:11px;color:var(--pri);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:10px">Ella Pro · R$ 9,90/mês</div>
       <div style="font-size:13px;line-height:1.9;color:var(--text)">
         ✓ <strong>Voz</strong> ilimitada<br>
         ✓ <strong>IA</strong> sem limite diário<br>
-        ✓ <strong>8 setores</strong> de vida<br>
+        ✓ <strong>Todos os setores</strong> de vida<br>
         ✓ Notificações + recorrentes
       </div>
     </div>
@@ -342,14 +468,14 @@
     <div style="text-align:center">
       <div style="font-size:54px;margin-bottom:6px" id="trialIcon">⏰</div>
       <div style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);margin-bottom:8px" id="trialTitle">Faltam 3 dias</div>
-      <div style="font-size:14px;color:var(--text-m);margin-bottom:22px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto" id="trialSub">Seu Ella Pro acaba em breve. Sem ativar, você volta pro plano Grátis (com limites).</div>
+      <div style="font-size:14px;color:var(--text-m);margin-bottom:22px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto" id="trialSub">Seu Ella Pro acaba em breve.</div>
     </div>
-    <div style="background:var(--rose-l,#FAF0F0);border-radius:14px;padding:16px 18px;margin-bottom:18px">
-      <div style="font-size:11px;color:var(--rose);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:10px">Você vai perder</div>
+    <div style="background:#FAF0EE;border-radius:14px;padding:16px 18px;margin-bottom:18px">
+      <div style="font-size:11px;color:var(--pri);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:10px">Você vai perder</div>
       <div style="font-size:13px;line-height:1.9;color:var(--text)">
         — Voz (vai precisar digitar)<br>
         — IA ilimitada (vira 5/dia)<br>
-        — Setores extras (vira 3)<br>
+        — Setores extras<br>
         — Notificações inteligentes
       </div>
     </div>
@@ -366,7 +492,7 @@
     navigator.serviceWorker.register('sw.js');
   }
 
-  // iOS install banner — shown on /app so the home-screen icon points to the app, not landing
+  // iOS install banner
   (function() {
     var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     var isSafari = /safari/i.test(navigator.userAgent) && !/chrome|crios|fxios/i.test(navigator.userAgent);
@@ -376,7 +502,7 @@
     if (document.getElementById('ios-banner')) return;
     var banner = document.createElement('div');
     banner.id = 'ios-banner';
-    banner.innerHTML = '<style>#ios-banner{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #E8DDD0;padding:16px 20px 32px;z-index:9999;box-shadow:0 -8px 32px rgba(44,44,44,.15);animation:slideUp .3s ease;font-family:\'DM Sans\',sans-serif}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}#ios-banner .ib-head{font-size:15px;font-weight:700;color:#2C2C2C;margin-bottom:4px}#ios-banner .ib-sub{font-size:12px;color:#9A8E83;margin-bottom:16px}#ios-banner .ib-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#9A8E83}#ios-banner .ib-steps{display:flex;gap:6px;align-items:flex-start}#ios-banner .ib-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;text-align:center}#ios-banner .ib-ico{width:48px;height:48px;border-radius:14px;background:#FAF0F0;display:flex;align-items:center;justify-content:center;font-size:24px}#ios-banner .ib-txt{font-size:11px;color:#9A8E83;line-height:1.4}#ios-banner .ib-arr{font-size:20px;color:#C47B7B;margin-top:14px;flex-shrink:0}</style><button class="ib-close" onclick="document.getElementById(\'ios-banner\').remove()">×</button><div class="ib-head">🌸 Instalar a Ella no iPhone</div><div class="ib-sub">3 passos rápidos pelo Safari</div><div class="ib-steps"><div class="ib-step"><div class="ib-ico">⎋</div><div class="ib-txt">Toca em <strong>Compartilhar</strong> aqui embaixo</div></div><div class="ib-arr">›</div><div class="ib-step"><div class="ib-ico">＋</div><div class="ib-txt">Toca em <strong>"Adicionar à Tela de Início"</strong></div></div><div class="ib-arr">›</div><div class="ib-step"><div class="ib-ico">🌸</div><div class="ib-txt"><strong>Toca Adicionar</strong> e pronto!</div></div></div>';
+    banner.innerHTML = '<style>#ios-banner{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #E8DDD0;padding:16px 20px 32px;z-index:9999;box-shadow:0 -8px 32px rgba(44,44,44,.15);animation:slideUp .3s ease;font-family:\'DM Sans\',sans-serif}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}#ios-banner .ib-head{font-size:15px;font-weight:700;color:#2C2C2C;margin-bottom:4px}#ios-banner .ib-sub{font-size:12px;color:#9A8E83;margin-bottom:16px}#ios-banner .ib-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#9A8E83}#ios-banner .ib-steps{display:flex;gap:6px;align-items:flex-start}#ios-banner .ib-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;text-align:center}#ios-banner .ib-ico{width:48px;height:48px;border-radius:14px;background:#FAF0EE;display:flex;align-items:center;justify-content:center;font-size:24px}#ios-banner .ib-txt{font-size:11px;color:#9A8E83;line-height:1.4}#ios-banner .ib-arr{font-size:20px;color:#C4736A;margin-top:14px;flex-shrink:0}</style><button class="ib-close" onclick="document.getElementById(\'ios-banner\').remove()">×</button><div class="ib-head">Instalar a Ella no iPhone</div><div class="ib-sub">3 passos rápidos pelo Safari</div><div class="ib-steps"><div class="ib-step"><div class="ib-ico">⎋</div><div class="ib-txt">Toca em <strong>Compartilhar</strong> aqui embaixo</div></div><div class="ib-arr">›</div><div class="ib-step"><div class="ib-ico">＋</div><div class="ib-txt">Toca em <strong>"Adicionar à Tela de Início"</strong></div></div><div class="ib-arr">›</div><div class="ib-step"><div class="ib-ico">ella</div><div class="ib-txt"><strong>Toca Adicionar</strong> e pronto!</div></div></div>';
     document.body.appendChild(banner);
   })();
 </script>
