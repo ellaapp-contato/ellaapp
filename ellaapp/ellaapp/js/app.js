@@ -194,8 +194,9 @@ function obGo(d) {
   if (obIdx < 0) obIdx = 0;
   if (obIdx > 3) obIdx = 3;
 
-  const track = document.getElementById('obTrack');
-  if (track) track.style.transform = 'translateX(-' + (obIdx * 100) + '%)';
+  document.querySelectorAll('#obTrack .ob-slide').forEach(function(slide, i) {
+    slide.style.transform = 'translateX(' + ((i - obIdx) * 100) + '%)';
+  });
 
   const skip = document.getElementById('obSkip');
   if (skip) skip.style.visibility = obIdx > 0 ? 'visible' : 'hidden';
